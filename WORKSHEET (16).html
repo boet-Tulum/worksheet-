@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kayuca Worksheet</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f1f5f9;display:flex;justify-content:center;padding:16px;min-height:100vh}
+.app{max-width:540px;width:100%;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#111}
+.hd{background:#1e293b;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:flex-start}
+.hd small{font-size:10px;letter-spacing:1.5px;opacity:.6;display:block}
+.hd strong{font-size:17px;font-weight:500}
+.hd-r{display:flex;align-items:center;gap:10px}
+.hd-t{text-align:right;font-size:12px;opacity:.7;line-height:1.4}
+.shB{display:flex;background:#1e293b}
+.shB button{flex:1;padding:9px 0;font-size:12px;font-weight:500;color:#fff;cursor:pointer;border:none;border-bottom:2px solid transparent;background:transparent;opacity:.5}
+.shB button.a{opacity:1;background:rgba(255,255,255,.06);border-bottom-color:rgba(255,255,255,.3)}
+.tabs{display:flex;border-bottom:1px solid #e5e7eb;background:#f9fafb;overflow-x:auto}
+.tabs button{flex:1;min-width:50px;padding:10px 2px;text-align:center;font-size:11px;color:#9ca3af;cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;font-weight:400;white-space:nowrap}
+.tabs button.a{color:#1d4ed8;border-bottom-color:#1d4ed8;font-weight:500}
+.cn{padding:16px}
+.sl{font-size:10px;letter-spacing:1.2px;color:#9ca3af;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #f3f4f6}
+.fcG{display:flex;gap:5px;margin-bottom:6px}
+.fcC{flex:1;background:#f9fafb;border-radius:8px;padding:8px 10px;border:1px solid #f3f4f6}
+.fcC.tot{border-left:2px solid #1d4ed8}
+.fcL{font-size:9px;color:#9ca3af;margin-bottom:2px}
+.fcL.t{color:#1d4ed8;font-weight:500}
+.fcI{width:100%;border:none;background:transparent;font-size:18px;font-weight:500;color:#111;outline:none;font-family:inherit;padding:0}
+.fcI::placeholder{color:#d1d5db}
+.fcV{font-size:18px;font-weight:500}
+.drB{padding:10px 12px;border-radius:8px;border:1px solid #f3f4f6;background:#f9fafb;margin-bottom:10px}
+.drR{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.drR:last-child{margin-bottom:0}
+.drL{font-size:11px;color:#6b7280}
+.bg{font-size:10px;font-weight:500;padding:2px 7px;border-radius:6px}
+.drN{background:#f3f4f6;color:#9ca3af}
+.drR_c{background:#ecfdf5;color:#065f46}.drB_c{background:#eff6ff;color:#1e40af}.drA_c{background:#fffbeb;color:#92400e}.drE_c{background:#fef2f2;color:#991b1b}
+.mt{height:4px;border-radius:2px;background:#f3f4f6;margin-top:6px;overflow:hidden}
+.mf{height:100%;border-radius:2px}
+.ea{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:12px}
+.eaT{font-size:12px;font-weight:500;color:#991b1b;margin-bottom:2px}
+.eaB{font-size:10px;color:#b91c1c;line-height:1.5}
+.wR{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.wI{flex:1;min-width:65px}
+.wL{font-size:9px;color:#9ca3af;display:block;margin-bottom:2px}
+.wI input,.wI select{width:100%;padding:5px 6px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-family:inherit;background:#f9fafb;color:#111;outline:none}
+.wCat{font-size:10px;font-weight:500;color:#1d4ed8;padding:8px 3px 3px;text-transform:uppercase;letter-spacing:.5px}
+.wT{width:100%;border-collapse:collapse;font-size:11px}
+.wT td{padding:5px 3px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+.wF{color:#6b7280}
+.pri{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:500}
+.eB{background:#f9fafb;border-radius:8px;padding:10px 12px;margin-bottom:6px;border:1px solid #f3f4f6}
+.eT{font-size:13px;font-weight:500;display:flex;align-items:center;gap:5px}
+.eTg{font-size:9px;padding:1px 6px;border-radius:6px}
+.tO{background:#eff6ff;color:#1e40af}.tV{background:#ecfdf5;color:#065f46}
+.rC{padding:8px 12px;border-left:3px solid;margin-bottom:5px;background:#f9fafb;border-radius:0 6px 6px 0}
+.rC.cG{border-left-color:#16a34a}.rC.cB{border-left-color:#1d4ed8}
+.rT{font-size:12px;font-weight:500;margin-bottom:1px}
+.rB{font-size:11px;color:#6b7280;line-height:1.4}
+.lg{display:flex;gap:8px;margin:8px 0;font-size:9px;color:#9ca3af}
+.lgI{display:flex;align-items:center;gap:3px}
+.eSel{font-size:10px;background:#fff;border:1px solid #e5e7eb;border-radius:4px;padding:2px 4px;color:#6b7280;outline:none;font-family:inherit;margin-left:4px}
+.door{font-size:9px;padding:1px 5px;background:#fffbeb;color:#92400e;border-radius:4px;margin-left:4px}
+.addBtn{width:100%;padding:7px;border-radius:8px;border:1px dashed #d1d5db;background:transparent;color:#6b7280;font-size:11px;cursor:pointer;font-family:inherit;margin-top:2px}
+.fBox{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:10px;margin-top:6px}
+.fRow{display:flex;gap:5px;margin-bottom:6px}
+.fLbl{font-size:9px;color:#9ca3af;display:block;margin-bottom:2px}
+.sBtn{flex:1;padding:7px;border-radius:6px;border:none;background:#1d4ed8;color:#fff;font-size:11px;cursor:pointer;font-family:inherit}
+.cBtn{padding:7px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:11px;cursor:pointer;font-family:inherit}
+.upBox{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px dashed #d1d5db;border-radius:8px;background:#f9fafb;margin-bottom:10px}
+.upBtn{padding:5px 12px;border-radius:6px;border:none;background:#1e293b;color:#fff;font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.gS{margin-top:14px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:480px;overflow:hidden}
+.mHd{background:#1e293b;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.mHd strong{font-size:14px;font-weight:500}
+.mBd{padding:16px}
+.pThumb{width:100%;border-radius:8px;object-fit:cover;max-height:300px;display:block}
+.pPh{width:100%;height:180px;background:#f3f4f6;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed #d1d5db}
+.secLbl{font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;margin-top:6px}
+.www-row{cursor:pointer;transition:background .15s}
+.www-row:hover td{background:#f0f9ff}
+.www-row.selected td{background:#dbeafe}
+.swap-hint{font-size:10px;color:#1d4ed8;padding:6px 10px;background:#eff6ff;border-radius:6px;margin-bottom:8px;text-align:center;border:1px solid #bfdbfe}
+.door-sec{margin-top:14px;padding:10px 12px;background:#f9fafb;border-radius:8px;border:1px solid #f3f4f6}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>const {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect
+} = React;
+const ROSTER_DEFAULT = [{
+  name: "Brianna Wolters",
+  role: "LG",
+  start: "09:30",
+  end: "17:30"
+}, {
+  name: "Loed van Berkel",
+  role: "LG",
+  start: "17:00",
+  end: "Sluit"
+}, {
+  name: "Boukje Bovelander",
+  role: "Kelner",
+  start: "11:00",
+  end: "17:00"
+}, {
+  name: "Filine van Dekken",
+  role: "Kelner",
+  start: "12:00",
+  end: "16:00"
+}, {
+  name: "MAXIM Lanting",
+  role: "Kelner",
+  start: "13:00",
+  end: "Sluit"
+}, {
+  name: "Jacomijn vd Beldt",
+  role: "Kelner",
+  start: "17:00",
+  end: "Sluit"
+}, {
+  name: "SAM van Hemmen",
+  role: "Seater",
+  start: "12:00",
+  end: "Sluit"
+}, {
+  name: "Carlijn Arendsen",
+  role: "Seater",
+  start: "18:00",
+  end: "Sluit"
+}, {
+  name: "Bob de Breij",
+  role: "Bar",
+  start: "09:30",
+  end: "17:00"
+}, {
+  name: "DEAN van Rooijen",
+  role: "Bar",
+  start: "17:00",
+  end: "Sluit"
+}, {
+  name: "Emma Bruggen",
+  role: "Runner",
+  start: "12:00",
+  end: "17:00"
+}, {
+  name: "Dyron Nolet",
+  role: "Runner",
+  start: "13:00",
+  end: "22:00"
+}, {
+  name: "Nele Koning",
+  role: "Runner",
+  start: "17:30",
+  end: "Sluit"
+}, {
+  name: "DAAN Boer",
+  role: "Runner",
+  start: "18:00",
+  end: "21:00"
+}, {
+  name: "VALERIE Sluijmer",
+  role: "Runner",
+  start: "18:00",
+  end: "Sluit"
+}, {
+  name: "ISABELLE SWETS",
+  role: "Newbie Spot",
+  start: "17:00",
+  end: "22:00"
+}, {
+  name: "MAARTEN BEDAUX",
+  role: "Newbie Spot",
+  start: "17:00",
+  end: "Sluit"
+}, {
+  name: "FILINE MINDEROP",
+  role: "Junior",
+  start: "17:00",
+  end: "20:00"
+}];
+const WWW_TEMPLATE = {
+  dag: [{
+    cat: "Leidinggevende",
+    slots: ["Leidinggevende"]
+  }, {
+    cat: "Kelners",
+    slots: ["100 Vlonder wijk", "200 Vlonder wijk", "300 Zand", "400 Zand", "400 Vlonder", "500 Wijk", "Binnen 10/20", "Binnen 30/40", "Overloper", "Overloper"]
+  }, {
+    cat: "Seating",
+    slots: ["Hoofdseater", "Seater", "Meeloper", "Meeloper", "Meeloper", "Meeloper"]
+  }, {
+    cat: "Bar",
+    slots: ["Bar", "Bar", "Bar", "Bar", "Pas", "Foodrunner", "Foodrunner", "Foodrunner"]
+  }, {
+    cat: "Runners",
+    slots: ["Desserts", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner"]
+  }, {
+    cat: "Strandbar",
+    slots: ["Strandbar", "Strandbar", "Strandbar", "Strandbar"]
+  }],
+  avond: [{
+    cat: "Leidinggevende",
+    slots: ["Leidinggevende"],
+    prios: [1]
+  }, {
+    cat: "Kelners",
+    slots: ["100 Vlonder wijk", "200 Vlonder wijk", "300 Zand", "400 Zand", "400 Vlonder", "500 Wijk", "Binnen 10/20", "Binnen 30/40", "Overloper", "Overloper"],
+    prios: [2, 2, 2, 3, 3, 3, 3, 3, 3, 3]
+  }, {
+    cat: "Seating",
+    slots: ["Hoofdseater", "Seater", "Meeloper", "Meeloper", "Meeloper", "Meeloper"],
+    prios: [1, 1, 3, 3, 3, 3]
+  }, {
+    cat: "Bar",
+    slots: ["Bar", "Bar", "Bar", "Bar", "Pas", "Foodrunner", "Foodrunner", "Foodrunner"],
+    prios: [1, 2, 3, 3, 1, 2, 3, 3]
+  }, {
+    cat: "Runners",
+    slots: ["Desserts", "Desserts", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner", "Runner"],
+    prios: [2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+  }, {
+    cat: "Strandbar",
+    slots: ["Strandbar", "Strandbar", "Strandbar", "Strandbar"],
+    prios: [3, 3, 3, 3]
+  }]
+};
+const RULES_DEFAULT = {
+  terras: [{
+    id: "parasol",
+    label: "Parasols open",
+    sub: "Wind onder grens",
+    value: 24,
+    op: "lte",
+    unit: "km/u"
+  }, {
+    id: "plantjes",
+    label: "Plantjes, kaarsjes & pluimen buiten",
+    sub: "Wind onder grens + geen harde regen",
+    value: 35,
+    op: "lt",
+    unit: "km/u"
+  }, {
+    id: "binnen",
+    label: "Binnen gezellig maken",
+    sub: "Altijd",
+    always: true
+  }, {
+    id: "schotten",
+    label: "Schotten plaatsen",
+    sub: "Wind boven grens, niet bij oostenwind",
+    value: 28,
+    op: "gte",
+    unit: "km/u"
+  }],
+  seating: [{
+    id: "smileO",
+    label: "Smile-app — Ontbijt",
+    sub: "Couverts boven grens",
+    value: 50,
+    op: "gt",
+    unit: "couverts"
+  }, {
+    id: "smileL",
+    label: "Smile-app — Lunch",
+    sub: "Couverts boven grens",
+    value: 250,
+    op: "gt",
+    unit: "couverts"
+  }, {
+    id: "smileD",
+    label: "Smile-app — Diner",
+    sub: "Couverts boven grens",
+    value: 200,
+    op: "gt",
+    unit: "couverts"
+  }],
+  ontbijt: [{
+    id: "menuO",
+    label: "Ontbijtmenu €12,50",
+    sub: "Ma t/m vr",
+    weekdayOnly: true
+  }, {
+    id: "brownie",
+    label: "Brownie + plaatje",
+    sub: "Couverts onder grens",
+    value: 50,
+    op: "lte",
+    unit: "couverts",
+    hasPhoto: true
+  }, {
+    id: "koffieO",
+    label: "Koffie",
+    sub: "Couverts onder grens",
+    value: 50,
+    op: "lte",
+    unit: "couverts"
+  }],
+  lunch: [{
+    id: "menuL",
+    label: "Lunchmenu €12,50",
+    sub: "Couverts onder grens",
+    value: 100,
+    op: "lte",
+    unit: "couverts"
+  }, {
+    id: "lemonade",
+    label: "Lemonade shots",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts",
+    hasPhoto: true
+  }, {
+    id: "keuken",
+    label: "Keukenplank",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "koffieL",
+    label: "Koffies",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "popcornL",
+    label: "Popcorn (binnen)",
+    sub: "Couverts onder grens",
+    value: 200,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "amigoL",
+    label: "Amigo",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "likeL",
+    label: "Like",
+    sub: "Altijd",
+    always: true
+  }],
+  diner: [{
+    id: "pizza",
+    label: "Uitdeelpizza",
+    sub: "Couverts onder grens",
+    value: 200,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "shots",
+    label: "Shots",
+    sub: "Couverts onder grens",
+    value: 300,
+    op: "lte",
+    unit: "couverts",
+    hasPhoto: true
+  }, {
+    id: "koffieD",
+    label: "Koffie",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "popcornD",
+    label: "Popcorn (binnen)",
+    sub: "Altijd binnen",
+    always: true
+  }, {
+    id: "amigoD",
+    label: "Amigo",
+    sub: "Couverts onder grens",
+    value: 250,
+    op: "lt",
+    unit: "couverts"
+  }, {
+    id: "likesD",
+    label: "Likes",
+    sub: "Altijd",
+    always: true
+  }]
+};
+const LS_RULES = "kayuca_rules";
+const LS_BRIEF = "kayuca_briefing";
+const LS_SECTIES = "kayuca_secties";
+const LS_RULES_META = "kayuca_rules_meta";
+const WS_ZAKEN = ["BBC","WS","TU","UBU","KAY","HF","PC"];
+const WS_ZAAK_COLORS = {BBC:"#6366f1",WS:"#f59e0b",TU:"#10b981",UBU:"#ef4444",KAY:"#3b82f6",HF:"#a855f7",PC:"#ec4899"};
+const urlParams = new URLSearchParams(window.location.search);
+const URL_ZAAK = urlParams.get("zaak") || null;
+const URL_TYPE = urlParams.get("type") || null;
+
+const RULES_META_DEFAULT = {
+  menuO:{voor:"beide",wanneer:"dag",couverts_van:"ontbijt"},
+  brownie:{voor:"beide",wanneer:"dag",couverts_van:"ontbijt"},
+  koffieO:{voor:"beide",wanneer:"dag",couverts_van:"ontbijt"},
+  menuL:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  lemonade:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  keuken:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  koffieL:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  popcornL:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  amigoL:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  likeL:{voor:"beide",wanneer:"dag",couverts_van:"lunch"},
+  pizza:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  shots:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  koffieD:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  popcornD:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  amigoD:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  likesD:{voor:"beide",wanneer:"avond",couverts_van:"diner"},
+  smileO:{voor:"bediening",wanneer:"dag",couverts_van:"ontbijt"},
+  smileL:{voor:"bediening",wanneer:"dag",couverts_van:"lunch"},
+  smileD:{voor:"bediening",wanneer:"avond",couverts_van:"diner"}
+};
+
+function loadRulesForWS(zaak) {
+  try {
+    const key = zaak ? LS_RULES+"_"+zaak : LS_RULES;
+    const s = localStorage.getItem(key);
+    if (s) return JSON.parse(s);
+    const fallback = localStorage.getItem(LS_RULES);
+    return fallback ? JSON.parse(fallback) : {};
+  } catch { return {}; }
+}
+
+function loadRulesMeta() {
+  try {
+    const s = localStorage.getItem(LS_RULES_META);
+    return Object.assign({}, RULES_META_DEFAULT, s ? JSON.parse(s) : {});
+  } catch { return RULES_META_DEFAULT; }
+}
+
+function loadSectiesWS() {
+  try { const s = localStorage.getItem(LS_SECTIES); return s ? JSON.parse(s) : {}; } catch { return {}; }
+}
+
+function loadBriefingWS(zaak) {
+  try { const s = localStorage.getItem(LS_BRIEF+"_"+zaak); return s ? JSON.parse(s) : null; } catch { return null; }
+}
+const tM = t => {
+  if (!t || t === "Sluit") return 1440;
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+};
+const isDag = p => tM(p.end) <= 1020 || tM(p.start) < 900 && tM(p.end) <= 1020;
+const isAvond = p => tM(p.start) >= 900 || tM(p.end) > 1020;
+const isDoor = p => tM(p.start) < 900 && (p.end === "Sluit" || tM(p.end) > 1020);
+const PC = {
+  1: {
+    bg: "#FCEBEB",
+    c: "#A32D2D"
+  },
+  2: {
+    bg: "#FAEEDA",
+    c: "#854F0B"
+  },
+  3: {
+    bg: "#E6F1FB",
+    c: "#185FA5"
+  }
+};
+const EETS = ["auto", "16:00", "16:30", "17:00"];
+const DIRS = ["N", "NO", "O", "ZO", "Z", "ZW", "W", "NW"];
+const WEERS = ["Zonnig", "Bewolkt", "Regen", "Harde regen"];
+const DAYS = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
+const CAT_LABELS = {
+  terras: "Terras",
+  seating: "Seating",
+  ontbijt: "Ontbijt",
+  lunch: "Lunch",
+  diner: "Diner"
+};
+const drukte = (type, val) => {
+  if (val === 0) return {
+    l: "—",
+    cls: "drN"
+  };
+  if (type === "o") {
+    if (val < 50) return {
+      l: "Rustig",
+      cls: "drR"
+    };
+    if (val < 80) return {
+      l: "Normaal",
+      cls: "drB"
+    };
+    if (val < 100) return {
+      l: "Druk",
+      cls: "drA"
+    };
+    return {
+      l: "Extreem",
+      cls: "drE"
+    };
+  }
+  if (val < 200) return {
+    l: "Rustig",
+    cls: "drR"
+  };
+  if (val < 400) return {
+    l: "Normaal",
+    cls: "drB"
+  };
+  if (val < 500) return {
+    l: "Druk",
+    cls: "drA"
+  };
+  return {
+    l: "Extreem",
+    cls: "drE"
+  };
+};
+const INP = {
+  width: "100%",
+  padding: "5px 6px",
+  border: "1px solid #e5e7eb",
+  borderRadius: 6,
+  fontSize: 11,
+  fontFamily: "inherit",
+  background: "#fff",
+  outline: "none"
+};
+const WS_DEFAULT = zaak => ({
+  fc: { o: "", l: "", d: "" },
+  w: { temp: 22, gevoel: 20, wind: 18, richting: "ZW", neerslag: 10, weer: "Bewolkt", dag: "Dinsdag" },
+  res: [], mensen: [], invites: { status: null },
+  roster: JSON.parse(JSON.stringify(ROSTER_DEFAULT)),
+  checked: {}, morgen: { o: "", l: "", d: "" },
+  wwwOverrides: {}, doorstaanOverrides: {}, ov: {}, photos: {}
+});
+
+function loadWS(zaak) {
+  try {
+    const s = localStorage.getItem("kayuca_ws_"+zaak);
+    return s ? { ...WS_DEFAULT(zaak), ...JSON.parse(s) } : WS_DEFAULT(zaak);
+  } catch { return WS_DEFAULT(zaak); }
+}
+
+function saveWS(zaak, data) {
+  try { localStorage.setItem("kayuca_ws_"+zaak, JSON.stringify(data)); } catch {}
+}
+
+function App() {
+  const dt = new Date();
+  const dateStr = dt.toLocaleDateString("nl-NL", {
+    weekday: "long",
+    day: "numeric",
+    month: "short"
+  });
+  const timeStr = dt.toLocaleTimeString("nl-NL", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+  const [sh, setSh] = useState(dt.getHours() >= 16 ? "avond" : "dag");
+  const [tab, setTab] = useState("ws");
+  const [zaak, setZaak] = useState(URL_ZAAK || "KAY");
+  const [wsType, setWsType] = useState(URL_TYPE || "bediening");
+  const [wsData, setWsData] = useState(() => loadWS(URL_ZAAK || "KAY"));
+  const [rules, setRules] = useState(() => loadRulesForWS(URL_ZAAK || "KAY"));
+  const [secties, setSecties] = useState(loadSectiesWS);
+  const [briefing, setBriefing] = useState(() => loadBriefingWS(URL_ZAAK || "KAY"));
+  const [rulesMeta, setRulesMeta] = useState(loadRulesMeta);
+
+  const ws = wsData;
+  const setWs = (key, val) => {
+    setWsData(prev => {
+      const next = { ...prev, [key]: typeof val === "function" ? val(prev[key]) : val };
+      saveWS(zaak, next);
+      return next;
+    });
+  };
+
+  const fc = ws.fc, setFc = v => setWs("fc", v);
+  const w = ws.w, setW = v => setWs("w", v);
+  const res = ws.res, setRes = v => setWs("res", v);
+  const mensen = ws.mensen, setMensen = v => setWs("mensen", v);
+  const invites = ws.invites, setInvites = v => setWs("invites", v);
+  const roster = ws.roster, setRoster = v => setWs("roster", v);
+  const checked = ws.checked, setChecked = v => setWs("checked", v);
+  const morgen = ws.morgen, setMorgen = v => setWs("morgen", v);
+  const wwwOverrides = ws.wwwOverrides, setWwwOverrides = v => setWs("wwwOverrides", v);
+  const doorstaanOverrides = ws.doorstaanOverrides, setDoorstaanOverrides = v => setWs("doorstaanOverrides", v);
+  const ov = ws.ov, setOv = v => setWs("ov", v);
+  const photos = ws.photos, setPhotos = v => setWs("photos", v);
+
+  const [resForm, setResForm] = useState({ tijd: "", naam: "", personen: "", locatie: "", notitie: "" });
+  const [addRes, setAddRes] = useState(false);
+  const [mensenForm, setMensenForm] = useState({ naam: "", type: "proefdag", tijd: "", notitie: "" });
+  const [addMens, setAddMens] = useState(false);
+  const [rosterName, setRosterName] = useState(null);
+  const [photoModal, setPhotoModal] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
+  // Luister naar localStorage wijzigingen vanuit admin (andere tab)
+  useEffect(() => {
+    const handler = e => {
+      if (e.key === LS_RULES_META && e.newValue) {
+        try { setRulesMeta(Object.assign({}, RULES_META_DEFAULT, JSON.parse(e.newValue))); } catch {}
+      }
+      if (e.key && e.key.startsWith(LS_RULES) && e.newValue) {
+        try { if (e.key === LS_RULES+"_"+zaak) setRules(JSON.parse(e.newValue)); } catch {}
+      }
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, [zaak]);
+
+  // switchZaak
+  const switchZaak = (newZaak) => {
+    setZaak(newZaak);
+    setWsData(loadWS(newZaak));
+    setRules(loadRulesForWS(newZaak));
+    setBriefing(loadBriefingWS(newZaak));
+    setSelectedSlot(null);
+  };
+
+  // Poll admin changes elke 3 seconden
+  useEffect(() => {
+    const id = setInterval(() => {
+      try {
+        const fresh = loadRulesForWS(zaak);
+        setRules(fresh);
+        const rm = localStorage.getItem(LS_RULES_META);
+        if (rm) {
+          try { setRulesMeta(Object.assign({}, RULES_META_DEFAULT, JSON.parse(rm))); } catch {}
+        }
+        const sc = localStorage.getItem(LS_SECTIES);
+        if (sc) setSecties(JSON.parse(sc));
+        const b = localStorage.getItem(LS_BRIEF+"_"+zaak);
+        if (b) setBriefing(JSON.parse(b));
+      } catch {}
+    }, 3000);
+    return () => clearInterval(id);
+  }, [zaak]);
+
+  // Weer automatisch ophalen van Open-Meteo (Zandvoort)
+  useEffect(() => {
+    const DAYS_NL = ["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"];
+    const WMO_WEER = {
+      0:"Zonnig",1:"Zonnig",2:"Bewolkt",3:"Bewolkt",
+      45:"Bewolkt",48:"Bewolkt",
+      51:"Regen",53:"Regen",55:"Regen",
+      61:"Regen",63:"Regen",65:"Harde regen",
+      71:"Regen",73:"Regen",75:"Harde regen",
+      80:"Regen",81:"Regen",82:"Harde regen",
+      95:"Harde regen",96:"Harde regen",99:"Harde regen"
+    };
+    const WMO_DIR = deg => {
+      const dirs = ["N","NO","O","ZO","Z","ZW","W","NW"];
+      return dirs[Math.round(deg / 45) % 8];
+    };
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=52.3667&longitude=4.5333&current=temperature_2m,apparent_temperature,windspeed_10m,winddirection_10m,precipitation_probability,weathercode&wind_speed_unit=kmh&timezone=Europe%2FAmsterdam")
+      .then(r => r.json())
+      .then(data => {
+        const c = data.current;
+        const dag = DAYS_NL[new Date().getDay()];
+        const weer = WMO_WEER[c.weathercode] || "Bewolkt";
+        setW(prev => ({
+          ...prev,
+          temp: Math.round(c.temperature_2m),
+          gevoel: Math.round(c.apparent_temperature),
+          wind: Math.round(c.windspeed_10m),
+          richting: WMO_DIR(c.winddirection_10m),
+          neerslag: c.precipitation_probability,
+          weer,
+          dag
+        }));
+      })
+      .catch(() => {}); // Stille fout — handmatig blijft werken
+  }, []);
+  const o = parseInt(fc.o) || 0,
+    l = parseInt(fc.l) || 0,
+    d = parseInt(fc.d) || 0,
+    tot = o + l + d;
+  const bo = drukte("o", o),
+    bl = drukte("l", l),
+    bd = drukte("d", d);
+  const isEx = bl.l === "Extreem" || bd.l === "Extreem";
+  const isOost = ["O", "NO", "ZO"].includes(w.richting);
+  const isRegen = w.weer === "Regen" || w.weer === "Harde regen";
+  const isHR = w.weer === "Harde regen";
+  const isZon = w.weer === "Zonnig";
+  const isWD = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag"].includes(w.dag);
+  const buiten = (() => {
+    if (isRegen || w.wind > 25) return false;
+    if (isZon && w.temp >= 10) return true;
+    if (w.temp >= 20) return true;
+    if (w.gevoel >= 15 && w.neerslag < 20) return true;
+    return false;
+  })();
+  const sReden = isRegen ? "Regen \u2014 binnen" : w.wind > 25 ? `Wind ${w.wind} \u2014 binnen` : isZon && w.temp >= 10 ? `Zonnig ${w.temp}\xB0C \u2014 buiten` : w.temp >= 20 ? `${w.temp}\xB0C \u2014 buiten` : w.gevoel >= 15 && w.neerslag < 20 ? `Gevoel ${w.gevoel}\xB0 \u2014 buiten` : "Omstandigheden \u2014 binnen";
+  const evalRule = (r, meta) => {
+    if (!meta) meta = rulesMeta;
+    if (r.always) return true;
+    if (r.weekdayOnly) return isWD;
+    const v = r.value;
+    const m = meta[r.id] || {};
+    const van = m.couverts_van || "hoogste";
+    if (r.id === "parasol") return w.wind <= v;
+    if (r.id === "plantjes") return w.wind < v && !isHR;
+    if (r.id === "schotten") return w.wind >= v && !isOost;
+    if (r.id === "smileO") return o > v;
+    if (r.id === "smileL") return l > v;
+    if (r.id === "smileD") return d > v;
+    if (r.unit === "couverts") {
+      const cov = van === "ontbijt" ? o : van === "lunch" ? l : van === "diner" ? d : Math.max(o, l, d);
+      const ops = {lt:(a,b)=>a<b,lte:(a,b)=>a<=b,gt:(a,b)=>a>b,gte:(a,b)=>a>=b};
+      return (ops[r.op] || ops.lt)(cov, v);
+    }
+    return true;
+  };
+  const buildItems = cat => {
+    // Lees altijd fresh uit localStorage voor actuele foto/meta data
+    let meta = rulesMeta;
+    try {
+      const s = localStorage.getItem(LS_RULES_META);
+      if (s) meta = Object.assign({}, RULES_META_DEFAULT, JSON.parse(s));
+    } catch {}
+    return (rules[cat] || [])
+      .filter(r => {
+        const m = meta[r.id] || {};
+        const voor = m.voor || "beide";
+        const wanneer = m.wanneer || "beide";
+        return (voor === "beide" || voor === wsType) && (wanneer === "beide" || wanneer === sh);
+      })
+      .map(r => {
+        const m = meta[r.id] || {};
+        const hasPhoto = !!(m.hasPhoto || r.hasPhoto);
+        const photo = hasPhoto ? (()=>{ try { return localStorage.getItem("kayuca_photo_"+r.id); } catch { return null; }})() : null;
+        return {...r, hasPhoto, photo, yes: evalRule(r, meta)};
+      });
+  };
+  const pKey = p => p.name + "_" + p.start;
+  const dagP = useMemo(() => roster.filter(p => isDag(p) || isDoor(p)), [roster]);
+  const avondP = useMemo(() => {
+    const all = roster.filter(p => isAvond(p) || isDoor(p));
+    return [...all.filter(p => !isDoor(p)), ...all.filter(p => isDoor(p))];
+  }, [roster]);
+  const buildWWW = useCallback((people, tmpl, viewKey) => {
+    const used = new Set();
+    const crm = {Leidinggevende:"LG",Kelners:"Kelner",Seating:"Seater",Bar:"Bar",Runners:"Runner",Strandbar:null};
+    Object.entries(wwwOverrides).forEach(([sk, pk]) => {
+      if (sk.startsWith(viewKey + "_")) {
+        const idx = people.findIndex(p => pKey(p) === pk);
+        if (idx >= 0) { /* mark used */ }
+      }
+    });
+    return tmpl.map((g, gi) => {
+      const tr = crm[g.cat];
+      const filled = g.slots.map((sf, si) => {
+        const slotKey = `${viewKey}_${gi}_${si}`;
+        if (!tr) return {func:sf,person:null,prio:g.prios?.[si],slotKey};
+        if (wwwOverrides[slotKey]) {
+          const pk2 = wwwOverrides[slotKey];
+          const idx = people.findIndex(p => pKey(p) === pk2);
+          if (idx >= 0) { used.add(idx); return {func:sf,person:people[idx],prio:g.prios?.[si],slotKey,swapped:true}; }
+        }
+        const idx = people.findIndex((_, ii) => !used.has(ii) && people[ii].role === tr && !people[ii].needed);
+        if (idx >= 0) { used.add(idx); return {func:sf,person:people[idx],prio:g.prios?.[si],slotKey}; }
+        return {func:sf,person:null,prio:g.prios?.[si],slotKey};
+      });
+      return {...g, filled};
+    });
+  }, [wwwOverrides]);
+  const wwwD = useMemo(() => buildWWW(dagP, WWW_TEMPLATE.dag, "dag"), [dagP, buildWWW]);
+  const wwwA = useMemo(() => buildWWW(avondP, WWW_TEMPLATE.avond, "avond"), [avondP, buildWWW]);
+  const handleSlotClick = (slot, people) => {
+    if (!slot.person) return;
+    if (!selectedSlot) { setSelectedSlot(slot); }
+    else {
+      if (selectedSlot.slotKey === slot.slotKey) { setSelectedSlot(null); return; }
+      setWwwOverrides(prev => {
+        const next = {...prev};
+        next[selectedSlot.slotKey] = pKey(slot.person);
+        next[slot.slotKey] = pKey(selectedSlot.person);
+        return next;
+      });
+      setSelectedSlot(null);
+    }
+  };
+  const isDoorEffectief = p => {
+    if (doorstaanOverrides[pKey(p)] !== undefined) return doorstaanOverrides[pKey(p)];
+    return isDoor(p);
+  };
+  const toggleCheck = id => setChecked(p => ({
+    ...p,
+    [id]: !p[id]
+  }));
+  const renderRules = (items, prefix, canCheck) => {
+    const chk = canCheck !== false;
+    const all = items.filter(i => i.yes).map(i => ({...i, _y: true}));
+    if (!all.length) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 4
+      }
+    }, all.map((item, idx) => {
+      const ckId = (prefix || "r") + "_" + idx;
+      const done = chk && !!checked[ckId];
+      const clickable = item._y && chk;
+      return /*#__PURE__*/React.createElement("div", {
+        key: idx,
+        onClick: () => {
+          if (clickable) toggleCheck(ckId);
+        },
+        style: {
+          padding: "8px 11px",
+          borderLeft: `3px solid ${item._y ? done ? "#86efac" : "#16a34a" : "#e5e7eb"}`,
+          background: item._y ? "#f0fdf4" : "#f9fafb",
+          borderRadius: "0 8px 8px 0",
+          marginBottom: 5,
+          opacity: item._y ? 1 : .45,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          cursor: clickable ? "pointer" : "default"
+        }
+      }, item._y && chk && /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 18,
+          height: 18,
+          borderRadius: 4,
+          border: `2px solid ${done ? "#16a34a" : "#86efac"}`,
+          background: done ? "#16a34a" : "transparent",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0
+        }
+      }, done && /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#fff",
+          fontSize: 11,
+          fontWeight: 700
+        }
+      }, "\u2713")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 12,
+          fontWeight: item._y ? 600 : 500,
+          color: item._y ? "#166534" : "#9ca3af",
+          textDecoration: done ? "line-through" : "none"
+        }
+      }, item.label), item.sub && /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 10,
+          color: item._y ? "#166534" : "#9ca3af",
+          opacity: .75,
+          marginTop: 1
+        }
+      }, item.sub)), item.hasPhoto && item._y && /*#__PURE__*/React.createElement("button", {
+        onClick: e => {
+          e.stopPropagation();
+          setPhotoModal(item.id);
+        },
+        style: {
+          background: "#fff",
+          border: "1px solid #bbf7d0",
+          borderRadius: 6,
+          padding: "3px 8px",
+          fontSize: 10,
+          color: "#166534",
+          cursor: "pointer",
+          fontFamily: "inherit",
+          flexShrink: 0
+        }
+      }, photos[item.id] ? "📷 Bekijk" : "📷 Foto"));
+    }));
+  };
+  const uploadPhoto = (id, e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => setPhotos(p => ({
+      ...p,
+      [id]: ev.target.result
+    }));
+    r.readAsDataURL(f);
+  };
+  const findRule = id => {
+    for (const cat of Object.keys(rules)) {
+      const r = rules[cat].find(x => x.id === id);
+      if (r) return r;
+    }
+    return null;
+  };
+  const Sl = ({
+    children
+  }) => /*#__PURE__*/React.createElement("div", {
+    className: "sl"
+  }, children);
+  const Wi = ({
+    label,
+    children
+  }) => /*#__PURE__*/React.createElement("div", {
+    className: "wI"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "wL"
+  }, label), children);
+  const Pr = ({
+    p
+  }) => p ? /*#__PURE__*/React.createElement("span", {
+    className: "pri",
+    style: {
+      background: PC[p]?.bg,
+      color: PC[p]?.c
+    }
+  }, p) : null;
+  const XBtn = ({
+    onClick
+  }) => /*#__PURE__*/React.createElement("button", {
+    onClick: onClick,
+    style: {
+      fontSize: 11,
+      color: "#d1d5db",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: "0 2px",
+      flexShrink: 0
+    }
+  }, "\u2715");
+  const renderWWW = () => {
+    const data = sh === "dag" ? wwwD : wwwA;
+    const people = sh === "dag" ? dagP : avondP;
+    return /*#__PURE__*/React.createElement("div", null, selectedSlot ? /*#__PURE__*/React.createElement("div", {
+      className: "swap-hint"
+    }, "\uD83D\uDC46 Tik een tweede naam om te wisselen met ", /*#__PURE__*/React.createElement("strong", null, selectedSlot.person?.name), " \u2014 of tik dezelfde om te annuleren") : /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: "#9ca3af",
+        textAlign: "center",
+        marginBottom: 8
+      }
+    }, "Tik op twee namen om ze te wisselen"), data.map((g, gi) => /*#__PURE__*/React.createElement("div", {
+      key: gi
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "wCat"
+    }, g.cat), /*#__PURE__*/React.createElement("table", {
+      className: "wT"
+    }, /*#__PURE__*/React.createElement("tbody", null, g.filled.map((s, si) => {
+      const isSelected = selectedSlot && selectedSlot.slotKey === s.slotKey;
+      const doorstaan = s.person && isDoorEffectief(s.person);
+      return /*#__PURE__*/React.createElement("tr", {
+        key: si,
+        className: `www-row${isSelected ? " selected" : ""}`,
+        onClick: () => s.person && handleSlotClick(s, people)
+      }, /*#__PURE__*/React.createElement("td", {
+        className: "wF",
+        style: {
+          width: "30%"
+        }
+      }, s.func), /*#__PURE__*/React.createElement("td", {
+        style: {
+          width: "36%",
+          fontWeight: 500,
+          color: s.person ? "#111" : "#d1d5db",
+          fontStyle: s.person ? "normal" : "italic"
+        }
+      }, s.person ? s.person.name : "—", doorstaan && /*#__PURE__*/React.createElement("span", {
+        className: "door"
+      }, "door"), s.swapped && /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 8,
+          color: "#7c3aed",
+          marginLeft: 3
+        }
+      }, "\u2726")), /*#__PURE__*/React.createElement("td", {
+        style: {
+          width: "18%",
+          color: "#9ca3af",
+          fontSize: 10
+        }
+      }, s.person ? s.person.start : ""), /*#__PURE__*/React.createElement("td", {
+        style: {
+          width: "16%",
+          textAlign: "center"
+        }
+      }, sh === "avond" && /*#__PURE__*/React.createElement(Pr, {
+        p: s.prio
+      })));
+    }))))), sh === "avond" && /*#__PURE__*/React.createElement("div", {
+      className: "lg"
+    }, [1, 2, 3].map(p => /*#__PURE__*/React.createElement("div", {
+      key: p,
+      className: "lgI"
+    }, /*#__PURE__*/React.createElement(Pr, {
+      p: p
+    }), /*#__PURE__*/React.createElement("span", null, p === 1 ? "Eerst" : p === 2 ? "Daarna" : "Laatste")))), Object.keys(wwwOverrides).length > 0 && /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        setWwwOverrides({});
+        setSelectedSlot(null);
+      },
+      style: {
+        marginTop: 8,
+        width: "100%",
+        padding: "7px",
+        borderRadius: 8,
+        border: "1px solid #fecaca",
+        background: "#fef2f2",
+        color: "#991b1b",
+        fontSize: 11,
+        cursor: "pointer",
+        fontFamily: "inherit"
+      }
+    }, "\u21A9 Reset wisselingen"), /*#__PURE__*/React.createElement("div", {
+      className: "door-sec"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontWeight: 600,
+        color: "#92400e",
+        textTransform: "uppercase",
+        letterSpacing: ".5px",
+        marginBottom: 8
+      }
+    }, "Doorstaan aanpassen"), people.filter(p => !p.needed).map(p => {
+      const door = isDoorEffectief(p);
+      const hasOvr = doorstaanOverrides[pKey(p)] !== undefined;
+      return /*#__PURE__*/React.createElement("div", {
+        key: pKey(p),
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "5px 0",
+          borderBottom: "1px solid #f3f4f6",
+          fontSize: 11
+        }
+      }, /*#__PURE__*/React.createElement("span", null, p.name, " ", /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#9ca3af",
+          fontSize: 10
+        }
+      }, p.role)), /*#__PURE__*/React.createElement("button", {
+        onClick: () => setDoorstaanOverrides(prev => ({
+          ...prev,
+          [pKey(p)]: !door
+        })),
+        style: {
+          fontSize: 10,
+          padding: "2px 8px",
+          borderRadius: 5,
+          border: "none",
+          cursor: "pointer",
+          fontFamily: "inherit",
+          background: door ? "#fffbeb" : hasOvr ? "#f0fdf4" : "#f3f4f6",
+          color: door ? "#92400e" : hasOvr ? "#166534" : "#6b7280",
+          fontWeight: door || hasOvr ? 600 : 400
+        }
+      }, door ? "⟳ Doorstaan" : "Normaal"));
+    }), Object.keys(doorstaanOverrides).length > 0 && /*#__PURE__*/React.createElement("button", {
+      onClick: () => setDoorstaanOverrides({}),
+      style: {
+        marginTop: 6,
+        width: "100%",
+        padding: "5px",
+        borderRadius: 6,
+        border: "1px solid #e5e7eb",
+        background: "#f9fafb",
+        color: "#6b7280",
+        fontSize: 10,
+        cursor: "pointer",
+        fontFamily: "inherit"
+      }
+    }, "Reset doorstaan")));
+  };
+  const allTabsDag = [["ws","Worksheet"],["www","WWW"],["brief","Briefing"]];
+  const allTabsAvond = [["ws","Worksheet"],["www","WWW"],["eet","Eetlijst"],["brief","Briefing"]];
+  const wsTabs = (sh === "dag" ? allTabsDag : allTabsAvond)
+    .filter(([key]) => wsType === "keuken" ? !["www","brief"].includes(key) : true);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "app"
+  }, photoModal && /*#__PURE__*/React.createElement("div", {
+    className: "overlay",
+    onClick: () => setPhotoModal(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mHd"
+  }, /*#__PURE__*/React.createElement("strong", null, findRule(photoModal)?.label || "Foto"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setPhotoModal(null),
+    style: {background:"rgba(255,255,255,.15)",border:"none",color:"#fff",borderRadius:6,padding:"3px 10px",cursor:"pointer",fontSize:11}
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "mBd"
+  }, (()=>{
+    let photoSrc = null;
+    try { photoSrc = localStorage.getItem("kayuca_photo_"+photoModal); } catch {}
+    if (!photoSrc) return /*#__PURE__*/React.createElement("div", {style:{textAlign:"center",padding:20,color:"#9ca3af",fontSize:13}},
+      "\uD83D\uDCF7 Geen foto ingesteld \u2014 stel in via de admin"
+    );
+    return /*#__PURE__*/React.createElement("img", {src:photoSrc, alt:"", style:{width:"100%",borderRadius:8,display:"block"}});
+  })()))), /*#__PURE__*/React.createElement("div", {
+    className: "hd"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("small", null, zaak, " \u2014 ", wsType === "keuken" ? "KEUKEN" : "BEDIENING"), /*#__PURE__*/React.createElement("strong", null, "Worksheet ", sh === "dag" ? "Dag" : "Avond")), /*#__PURE__*/React.createElement("div", {
+    className: "hd-r"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-t"
+  }, dateStr, /*#__PURE__*/React.createElement("br", null), timeStr))),
+  !URL_ZAAK && /*#__PURE__*/React.createElement("div", {
+    style:{display:"flex",gap:6,padding:"8px 14px",background:"#f1f5f9",borderBottom:"1px solid #e5e7eb",overflowX:"auto",flexWrap:"wrap"}
+  },
+    WS_ZAKEN.map(z => /*#__PURE__*/React.createElement("button", {key:z,
+      onClick:()=>switchZaak(z),
+      style:{padding:"4px 12px",borderRadius:20,border:"1px solid "+WS_ZAAK_COLORS[z],background:zaak===z?WS_ZAAK_COLORS[z]:"transparent",color:zaak===z?"#fff":WS_ZAAK_COLORS[z],fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}
+    }, z)),
+    /*#__PURE__*/React.createElement("div", {style:{width:1,background:"#e5e7eb",margin:"0 4px",flexShrink:0}}),
+    ["bediening","keuken"].map(t => /*#__PURE__*/React.createElement("button", {key:t,
+      onClick:()=>setWsType(t),
+      style:{padding:"4px 12px",borderRadius:20,border:"1px solid #334155",background:wsType===t?"#334155":"transparent",color:wsType===t?"#fff":"#64748b",fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textTransform:"capitalize"}
+    }, t))
+  ), /*#__PURE__*/React.createElement("div", {
+    className: "shB"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: sh === "dag" ? "a" : "",
+    onClick: () => {
+      setSh("dag");
+      setTab("ws");
+    }
+  }, "\u2600\uFE0F Dag \xB7 t/m 16:00"), /*#__PURE__*/React.createElement("button", {
+    className: sh === "avond" ? "a" : "",
+    onClick: () => {
+      setSh("avond");
+      setTab("ws");
+    }
+  }, "\uD83C\uDF19 Avond \xB7 vanaf 16:00")), /*#__PURE__*/React.createElement("div", {
+    className: "tabs"
+  }, wsTabs.map(([id, lb]) => /*#__PURE__*/React.createElement("button", {
+    key: id,
+    className: tab === id ? "a" : "",
+    onClick: () => setTab(id)
+  }, lb))), /*#__PURE__*/React.createElement("div", {
+    className: "cn"
+  }, tab === "ws" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "upBox"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 500,
+      color: "#1e293b"
+    }
+  }, "Rooster"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: "#9ca3af"
+    }
+  }, rosterName || "Standaard rooster actief")), /*#__PURE__*/React.createElement("label", {
+    className: "upBtn",
+    style: {
+      cursor: "pointer"
+    }
+  }, "\uD83D\uDCC2 Upload", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: ".csv,.txt,.html,.htm",
+    style: {
+      display: "none"
+    },
+    onChange: e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const text = ev.target.result;
+        let parsed = [];
+        if (f.name.endsWith(".html") || f.name.endsWith(".htm")) {
+          const rIdx = text.search(/ROSTER_DEFAULT\s*=\s*\[/);
+          if (rIdx !== -1) {
+            const bs = text.indexOf("[", rIdx);
+            let depth = 0,
+              i = bs,
+              end = bs;
+            for (; i < text.length; i++) {
+              if (text[i] === "[") depth++;else if (text[i] === "]") {
+                depth--;
+                if (depth === 0) {
+                  end = i;
+                  break;
+                }
+              }
+            }
+            const entries = text.slice(bs, end + 1).match(/\{[^}]+\}/g) || [];
+            entries.forEach(entry => {
+              const get = key => {
+                const m = entry.match(new RegExp(key + '\\s*:\\s*"([^"]*)"'));
+                return m ? m[1] : "";
+              };
+              const name = get("name"),
+                role = get("role"),
+                start = get("start"),
+                end2 = get("end");
+              const needed = /needed\s*:\s*true/.test(entry);
+              if (name && role && start && end2) parsed.push({
+                name,
+                role,
+                start,
+                end: end2,
+                needed
+              });
+            });
+          }
+          if (parsed.length === 0) {
+            const re = /<div[^>]*class="dates[^>]*>[\s\S]*?<div[^>]*>(\d{1,2}:\d{2})<\/div>[\s\S]*?<div[^>]*>\s*(Sluit|\d{1,2}:\d{2})\s*<\/div>[\s\S]*?class="name[^>]*>\s*([^<]+?)\s*<\/div>[\s\S]*?<div[^>]*>(\w[^<]*)<\/div>/g;
+            let m;
+            while ((m = re.exec(text)) !== null) {
+              const s = m[1],
+                e2 = m[2].trim(),
+                n = m[3].trim(),
+                r = m[4].trim();
+              if (n && r && s && e2) parsed.push({
+                name: n,
+                role: r,
+                start: s,
+                end: e2,
+                needed: false
+              });
+            }
+          }
+        } else {
+          parsed = text.split("\n").map(l => l.trim()).filter(Boolean).map(line => {
+            const p = line.split(/[,\t;]/).map(x => x.trim());
+            return p.length >= 4 ? {
+              name: p[0],
+              role: p[1],
+              start: p[2],
+              end: p[3],
+              needed: p[4] === "nodig"
+            } : null;
+          }).filter(Boolean);
+        }
+        if (parsed.length > 0) {
+          setRoster(parsed);
+          setRosterName(f.name + " (" + parsed.length + "p)");
+          setWwwOverrides({});
+          setDoorstaanOverrides({});
+        } else alert("Kon rooster niet lezen.");
+      };
+      rd.readAsText(f);
+    }
+  })), rosterName && /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setRoster(ROSTER_DEFAULT);
+      setRosterName(null);
+      setWwwOverrides({});
+      setDoorstaanOverrides({});
+    },
+    style: {
+      fontSize: 10,
+      color: "#9ca3af",
+      background: "none",
+      border: "none",
+      cursor: "pointer"
+    }
+  }, "\u21A9")), sh === "dag" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Sl, null, "Forecast vandaag"), /*#__PURE__*/React.createElement("div", {
+    className: "fcG"
+  }, [["o", "Ontbijt"], ["l", "Lunch"]].map(([k, lb]) => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    className: "fcC"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fcL"
+  }, lb), /*#__PURE__*/React.createElement("input", {
+    className: "fcI",
+    type: "number",
+    min: "0",
+    placeholder: "0",
+    value: fc[k],
+    onChange: e => setFc(p => ({
+      ...p,
+      [k]: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "fcC tot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fcL t"
+  }, "O+L"), /*#__PURE__*/React.createElement("div", {
+    className: "fcV"
+  }, o + l > 0 ? o + l : "—"))), /*#__PURE__*/React.createElement("div", {
+    className: "fcG",
+    style: {marginBottom:6}
+  }, /*#__PURE__*/React.createElement("div", {className:"fcC"}, /*#__PURE__*/React.createElement("div", {className:"fcL"}, "Diner"), /*#__PURE__*/React.createElement("input", {className:"fcI",type:"number",min:"0",placeholder:"0",value:fc.d,onChange:e=>setFc(p=>({...p,d:e.target.value}))})), /*#__PURE__*/React.createElement("div", {className:"fcC tot"}, /*#__PURE__*/React.createElement("div", {className:"fcL t"}, "Totaal"), /*#__PURE__*/React.createElement("div", {className:"fcV"}, tot > 0 ? tot : "—"))), /*#__PURE__*/React.createElement("div", {
+    className: "drB"
+  }, [["Ontbijt", bo, o], ["Lunch", bl, l], ["Diner", bd, d]].map(([lb, dr, v]) => /*#__PURE__*/React.createElement("div", {
+    key: lb,
+    className: "drR"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "drL"
+  }, lb), /*#__PURE__*/React.createElement("span", {
+    className: "bg " + (v > 0 ? dr.cls + "_c" : "drN")
+  }, v > 0 ? dr.l : "Vul in")))), /*#__PURE__*/React.createElement("div", {
+    className: "wR"
+  }, /*#__PURE__*/React.createElement(Wi, {
+    label: "Temp \xB0C"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: w.temp,
+    onChange: e => setW(p => ({
+      ...p,
+      temp: +e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement(Wi, {
+    label: "Gevoel \xB0C"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: w.gevoel,
+    onChange: e => setW(p => ({
+      ...p,
+      gevoel: +e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement(Wi, {
+    label: "Wind km/u"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: w.wind,
+    onChange: e => setW(p => ({
+      ...p,
+      wind: +e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement(Wi, {
+    label: "Richting"
+  }, /*#__PURE__*/React.createElement("select", {
+    value: w.richting,
+    onChange: e => setW(p => ({
+      ...p,
+      richting: e.target.value
+    }))
+  }, DIRS.map(d => /*#__PURE__*/React.createElement("option", {
+    key: d
+  }, d))))), /*#__PURE__*/React.createElement("div", {
+    className: "wR"
+  }, /*#__PURE__*/React.createElement(Wi, {
+    label: "Neerslag %"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    min: "0",
+    max: "100",
+    value: w.neerslag,
+    onChange: e => setW(p => ({
+      ...p,
+      neerslag: +e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement(Wi, {
+    label: "Weer"
+  }, /*#__PURE__*/React.createElement("select", {
+    value: w.weer,
+    onChange: e => setW(p => ({
+      ...p,
+      weer: e.target.value
+    }))
+  }, WEERS.map(x => /*#__PURE__*/React.createElement("option", {
+    key: x
+  }, x)))), /*#__PURE__*/React.createElement(Wi, {
+    label: "Dag"
+  }, /*#__PURE__*/React.createElement("select", {
+    value: w.dag,
+    onChange: e => setW(p => ({
+      ...p,
+      dag: e.target.value
+    }))
+  }, DAYS.map(x => /*#__PURE__*/React.createElement("option", {
+    key: x
+  }, x))))), renderRules(buildItems("terras"), "terras", true), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Seating"), renderRules([{
+    label: `${buiten ? "Buiten" : "Binnen"} opstelling`,
+    sub: sReden,
+    yes: true
+  }, ...buildItems("seating")], "seating", false)), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Geven"),
+    (()=>{
+      const groepen = [{key:"ontbijt",label:"\u2615 Ontbijt",color:"#f59e0b"},{key:"lunch",label:"\uD83E\uDD57 Lunch",color:"#10b981"},{key:"diner",label:"\uD83C\uDF7D Diner",color:"#ef4444"},{key:"hoogste",label:"\uD83D\uDCCA Overig",color:"#6b7280"}];
+      const items = buildItems("geven");
+      if (!items.length) return null;
+      return /*#__PURE__*/React.createElement(React.Fragment, null,
+        groepen.map(g => {
+          const gi = items.filter(r => (rulesMeta[r.id]?.couverts_van || "hoogste") === g.key);
+          if (!gi.length) return null;
+          return /*#__PURE__*/React.createElement("div", {key:g.key, style:{marginBottom:8}},
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:6,marginBottom:4}},
+              /*#__PURE__*/React.createElement("div", {style:{width:3,height:12,borderRadius:2,background:g.color,flexShrink:0}}),
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:10,fontWeight:700,color:g.color,textTransform:"uppercase",letterSpacing:"0.5px"}}, g.label)
+            ),
+            renderRules(gi, "geven_"+g.key, false)
+          );
+        })
+      );
+    })()
+  ), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Reserveringen"), res.map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.id,
+    style: {
+      padding: "8px 10px",
+      borderRadius: 8,
+      border: "1px solid #f3f4f6",
+      background: "#f9fafb",
+      marginBottom: 5,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, r.tijd, " \u2014 ", r.naam, " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 400,
+      color: "#9ca3af"
+    }
+  }, "(", r.personen, "p)")), (r.locatie || r.notitie) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: "#6b7280"
+    }
+  }, [r.locatie, r.notitie].filter(Boolean).join(" · "))), /*#__PURE__*/React.createElement(XBtn, {
+    onClick: () => setRes(p => p.filter(x => x.id !== r.id))
+  }))), !addRes ? /*#__PURE__*/React.createElement("button", {
+    className: "addBtn",
+    onClick: () => setAddRes(true)
+  }, "+ Reservering toevoegen") : /*#__PURE__*/React.createElement("div", {
+    className: "fBox"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fRow"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Tijd"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "time",
+    value: resForm.tijd,
+    onChange: e => setResForm(p => ({
+      ...p,
+      tijd: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Naam"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "text",
+    placeholder: "Naam groep...",
+    value: resForm.naam,
+    onChange: e => setResForm(p => ({
+      ...p,
+      naam: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Pers."), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "number",
+    placeholder: "0",
+    value: resForm.personen,
+    onChange: e => setResForm(p => ({
+      ...p,
+      personen: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "fRow"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Locatie"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "text",
+    placeholder: "Buiten...",
+    value: resForm.locatie,
+    onChange: e => setResForm(p => ({
+      ...p,
+      locatie: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Notitie"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "text",
+    placeholder: "Bijzonderheden...",
+    value: resForm.notitie,
+    onChange: e => setResForm(p => ({
+      ...p,
+      notitie: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "sBtn",
+    onClick: () => {
+      if (!resForm.naam) return;
+      setRes(p => [...p, {
+        ...resForm,
+        id: Date.now()
+      }]);
+      setResForm({
+        tijd: "",
+        naam: "",
+        personen: "",
+        locatie: "",
+        notitie: ""
+      });
+      setAddRes(false);
+    }
+  }, "Opslaan"), /*#__PURE__*/React.createElement("button", {
+    className: "cBtn",
+    onClick: () => setAddRes(false)
+  }, "Annuleer")))), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Proefdagen & eerste werkdagen"), mensen.map(m => {
+    const isPr = m.type === "proefdag",
+      col = isPr ? "#d97706" : "#7c3aed",
+      bg = isPr ? "#fffbeb" : "#f5f3ff",
+      bc = isPr ? "#fde68a" : "#ddd6fe";
+    return /*#__PURE__*/React.createElement("div", {
+      key: m.id,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "8px 10px",
+        borderRadius: 8,
+        border: `1px solid ${bc}`,
+        borderLeft: `3px solid ${col}`,
+        background: bg,
+        marginBottom: 5
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600
+      }
+    }, m.naam), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        fontWeight: 600,
+        padding: "2px 6px",
+        borderRadius: 6,
+        background: col,
+        color: "#fff"
+      }
+    }, isPr ? "Proefdag" : "1e werkdag")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: "#6b7280"
+      }
+    }, m.tijd, m.notitie ? " · " + m.notitie : "")), /*#__PURE__*/React.createElement(XBtn, {
+      onClick: () => setMensen(p => p.filter(x => x.id !== m.id))
+    }));
+  }), !addMens ? /*#__PURE__*/React.createElement("button", {
+    className: "addBtn",
+    onClick: () => setAddMens(true)
+  }, "+ Persoon toevoegen") : /*#__PURE__*/React.createElement("div", {
+    className: "fBox"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fRow"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Naam"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "text",
+    placeholder: "Naam...",
+    value: mensenForm.naam,
+    onChange: e => setMensenForm(p => ({
+      ...p,
+      naam: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Type"), /*#__PURE__*/React.createElement("select", {
+    style: INP,
+    value: mensenForm.type,
+    onChange: e => setMensenForm(p => ({
+      ...p,
+      type: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "proefdag"
+  }, "Proefdag"), /*#__PURE__*/React.createElement("option", {
+    value: "eerste"
+  }, "1e werkdag")))), /*#__PURE__*/React.createElement("div", {
+    className: "fRow"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Tijd"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "time",
+    value: mensenForm.tijd,
+    onChange: e => setMensenForm(p => ({
+      ...p,
+      tijd: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "fLbl"
+  }, "Notitie"), /*#__PURE__*/React.createElement("input", {
+    style: INP,
+    type: "text",
+    value: mensenForm.notitie,
+    onChange: e => setMensenForm(p => ({
+      ...p,
+      notitie: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "sBtn",
+    onClick: () => {
+      if (!mensenForm.naam) return;
+      setMensen(p => [...p, {
+        ...mensenForm,
+        id: Date.now()
+      }]);
+      setMensenForm({
+        naam: "",
+        type: "proefdag",
+        tijd: "",
+        notitie: ""
+      });
+      setAddMens(false);
+    }
+  }, "Opslaan"), /*#__PURE__*/React.createElement("button", {
+    className: "cBtn",
+    onClick: () => setAddMens(false)
+  }, "Annuleer")))), Object.values(checked).some(Boolean) && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setChecked({}),
+    style: {
+      marginTop: 14,
+      width: "100%",
+      padding: "7px",
+      borderRadius: 8,
+      border: "1px solid #fecaca",
+      background: "#fef2f2",
+      color: "#991b1b",
+      fontSize: 11,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "\u21A9 Reset vinkjes")), sh === "avond" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Sl, null, "Forecast avond"), /*#__PURE__*/React.createElement("div", {
+    className: "fcG"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fcC"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fcL"
+  }, "Diner"), /*#__PURE__*/React.createElement("input", {
+    className: "fcI",
+    type: "number",
+    min: "0",
+    placeholder: "0",
+    value: fc.d,
+    onChange: e => setFc(p => ({
+      ...p,
+      d: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "fcC tot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fcL t"
+  }, "Totaal dag"), /*#__PURE__*/React.createElement("div", {
+    className: "fcV"
+  }, tot > 0 ? tot : "—"))), d > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "drB"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "drR"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "drL"
+  }, "Diner"), /*#__PURE__*/React.createElement("span", {
+    className: "bg " + bd.cls + "_c"
+  }, bd.l)), /*#__PURE__*/React.createElement("div", {
+    className: "mt"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mf",
+    style: {
+      width: `${Math.min(Math.round(d / 500 * 100), 100)}%`,
+      background: d < 200 ? "#4ade80" : d < 400 ? "#3b82f6" : d < 500 ? "#f59e0b" : "#ef4444"
+    }
+  }))), isEx && /*#__PURE__*/React.createElement("div", {
+    className: "ea"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "eaT"
+  }, "Extreem drukke avond"), /*#__PURE__*/React.createElement("div", {
+    className: "eaB"
+  }, "Niets aannemen 16:00\u201316:30. Passanten 17:00. Stoplicht 16:30.")), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Seating"), renderRules([{
+    label: `${buiten ? "Buiten" : "Binnen"} opstelling`,
+    sub: sReden,
+    yes: true
+  }, ...buildItems("seating")], "seating2", false)), d > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Geven"),
+    (()=>{
+      const groepen = [{key:"ontbijt",label:"\u2615 Ontbijt",color:"#f59e0b"},{key:"lunch",label:"\uD83E\uDD57 Lunch",color:"#10b981"},{key:"diner",label:"\uD83C\uDF7D Diner",color:"#ef4444"},{key:"hoogste",label:"\uD83D\uDCCA Overig",color:"#6b7280"}];
+      const items = buildItems("geven");
+      if (!items.length) return null;
+      return /*#__PURE__*/React.createElement(React.Fragment, null,
+        groepen.map(g => {
+          const gi = items.filter(r => (rulesMeta[r.id]?.couverts_van || "hoogste") === g.key);
+          if (!gi.length) return null;
+          return /*#__PURE__*/React.createElement("div", {key:g.key, style:{marginBottom:8}},
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:6,marginBottom:4}},
+              /*#__PURE__*/React.createElement("div", {style:{width:3,height:12,borderRadius:2,background:g.color,flexShrink:0}}),
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:10,fontWeight:700,color:g.color,textTransform:"uppercase",letterSpacing:"0.5px"}}, g.label)
+            ),
+            renderRules(gi, "geven_avond_"+g.key, false)
+          );
+        })
+      );
+    })()
+  ), /*#__PURE__*/React.createElement("div", {
+    className: "gS"
+  }, /*#__PURE__*/React.createElement(Sl, null, "Invites"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "12px 14px",
+      borderRadius: 8,
+      border: `1px solid ${invites.status === "ja" ? "#bbf7d0" : invites.status === "nee" ? "#fecaca" : "#e5e7eb"}`,
+      background: invites.status === "ja" ? "#f0fdf4" : invites.status === "nee" ? "#fef2f2" : "#f9fafb",
+      borderLeft: `3px solid ${invites.status === "ja" ? "#16a34a" : invites.status === "nee" ? "#dc2626" : "#e5e7eb"}`
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: invites.status === "ja" ? "#166534" : invites.status === "nee" ? "#991b1b" : "#374151"
+    }
+  }, invites.status === "ja" ? "✓ Invites komen" : invites.status === "nee" ? "✕ Invites komen niet" : "Komen de invites?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: "#6b7280",
+      marginTop: 2
+    }
+  }, "2 personen")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setInvites({
+      status: "ja"
+    }),
+    style: {
+      background: invites.status === "ja" ? "#16a34a" : "#f3f4f6",
+      color: invites.status === "ja" ? "#fff" : "#374151",
+      border: "none",
+      borderRadius: 6,
+      padding: "5px 10px",
+      fontSize: 11,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Ja"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setInvites({
+      status: "nee"
+    }),
+    style: {
+      background: invites.status === "nee" ? "#dc2626" : "#f3f4f6",
+      color: invites.status === "nee" ? "#fff" : "#374151",
+      border: "none",
+      borderRadius: 6,
+      padding: "5px 10px",
+      fontSize: 11,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Nee")))), Object.values(checked).some(Boolean) && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setChecked({}),
+    style: {
+      marginTop: 14,
+      width: "100%",
+      padding: "7px",
+      borderRadius: 8,
+      border: "1px solid #fecaca",
+      background: "#fef2f2",
+      color: "#991b1b",
+      fontSize: 11,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "\u21A9 Reset vinkjes"))), tab === "www" && renderWWW(), tab === "eet" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Sl, null, "Eetlijst avond \u2014 op overnamemoment"), isEx && /*#__PURE__*/React.createElement("div", {
+    className: "ea",
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 500,
+      color: "#991b1b"
+    }
+  }, "Extreem druk \u2014 overweeg vroegere eetshift")), eetTijden.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#9ca3af",
+      fontStyle: "italic"
+    }
+  }, "Geen eetshifts bepaald"), eetTijden.map(tijd => {
+    const pp = eetG[tijd] || [];
+    const starters = pp.filter(p => !p.doorstaan);
+    const doorstaanders = pp.filter(p => p.doorstaan);
+    return /*#__PURE__*/React.createElement("div", {
+      key: tijd,
+      className: "eB"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "eT"
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700
+      }
+    }, tijd), starters.length > 0 && doorstaanders.length > 0 && /*#__PURE__*/React.createElement("span", {
+      className: "eTg tO"
+    }, "Overname + start"), starters.length > 0 && doorstaanders.length === 0 && /*#__PURE__*/React.createElement("span", {
+      className: "eTg tV"
+    }, "Avondstart"), starters.length === 0 && doorstaanders.length > 0 && /*#__PURE__*/React.createElement("span", {
+      className: "eTg tO"
+    }, "Overname"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: "auto",
+        fontSize: 10,
+        color: "#9ca3af"
+      }
+    }, pp.length, " pers.")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6
+      }
+    }, starters.length > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "secLbl"
+    }, "Starten om ", tijd), starters.map(p => /*#__PURE__*/React.createElement("div", {
+      key: p.key,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        fontSize: 11,
+        padding: "3px 0",
+        borderBottom: "1px solid #f3f4f6"
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 500
+      }
+    }, p.name), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#9ca3af",
+        marginLeft: 5,
+        fontSize: 10
+      }
+    }, p.role, " \xB7 start ", p.start)), /*#__PURE__*/React.createElement("select", {
+      className: "eSel",
+      value: ov[p.key] || "auto",
+      onChange: e => setOv(pr => ({
+        ...pr,
+        [p.key]: e.target.value
+      }))
+    }, EETS.map(s => /*#__PURE__*/React.createElement("option", {
+      key: s,
+      value: s
+    }, s === "auto" ? `Auto (${p.autoEet})` : s))))), doorstaanders.length > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "secLbl",
+      style: {
+        marginTop: starters.length > 0 ? 8 : 0
+      }
+    }, "Nemen over om ", tijd), doorstaanders.map(p => /*#__PURE__*/React.createElement("div", {
+      key: p.key,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        fontSize: 11,
+        padding: "3px 0",
+        borderBottom: "1px solid #f3f4f6"
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 500
+      }
+    }, p.name), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#9ca3af",
+        marginLeft: 5,
+        fontSize: 10
+      }
+    }, p.role, " \xB7 ", p.start, "\u2013", p.end), /*#__PURE__*/React.createElement("span", {
+      className: "door"
+    }, "doorstaan")), /*#__PURE__*/React.createElement("select", {
+      className: "eSel",
+      value: ov[p.key] || "auto",
+      onChange: e => setOv(pr => ({
+        ...pr,
+        [p.key]: e.target.value
+      }))
+    }, EETS.map(s => /*#__PURE__*/React.createElement("option", {
+      key: s,
+      value: s
+    }, s === "auto" ? `Auto (${p.autoEet})` : s)))))));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement(Sl, null, "Eetregels"), [["Vers/nieuw", "Eet 30 min voor zijn/haar shift (17:00 start → eet 16:30)"], ["Doorstaander", "Eet op het overnamemoment van de opvolger (zelfde rol)"], ["Handmatig", "Gebruik dropdown om af te wijken"]].map(([t, b]) => /*#__PURE__*/React.createElement("div", {
+    key: t,
+    className: "rC cG"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rT"
+  }, t), /*#__PURE__*/React.createElement("div", {
+    className: "rB"
+  }, b))))), tab === "brief" && /*#__PURE__*/React.createElement("div", null,
+    (()=>{
+      const maal = sh === "dag" ? "lunch" : "diner";
+      const cov = sh === "dag" ? l : d;
+      const briefs = briefing?.[maal] || [];
+      const actief = briefs.find(b => cov <= b.tot) || briefs[briefs.length-1];
+      if (!actief) return /*#__PURE__*/React.createElement("div", {style:{padding:20,textAlign:"center",color:"#9ca3af",fontSize:13}}, "Geen briefing ingesteld. Stel in via de admin.");
+      return /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("div", {style:{background:"#1e3a5f",borderRadius:10,padding:"10px 14px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between"}},
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#93c5fd",marginBottom:2}}, maal === "lunch" ? "Lunch \xB7 "+l+" couverts" : "Diner \xB7 "+d+" couverts"),
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:15,fontWeight:700,color:"#fff"}}, actief.naam)
+          )
+        ),
+        actief.tekst.split("\n").map((line, i) => {
+          const isHeader = line.length > 0 && !line.startsWith("-") && line === line.trimStart();
+          return /*#__PURE__*/React.createElement("div", {key:i,
+            style:{fontSize:isHeader?12:13,fontWeight:isHeader?700:400,color:isHeader?"#1d4ed8":"#374151",marginTop:isHeader?12:2,marginBottom:isHeader?4:0,paddingLeft:line.startsWith("-")?12:0,lineHeight:1.5}
+          }, line || /*#__PURE__*/React.createElement("br", null));
+        })
+      );
+    })()
+  )));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
