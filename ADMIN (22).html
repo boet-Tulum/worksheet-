@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kayuca Admin</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;color:#e2e8f0;padding:0}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#1e293b;padding:0;flex-shrink:0;display:flex;flex-direction:column}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid #334155}
+.sb-logo small{font-size:9px;letter-spacing:2px;opacity:.5;display:block;text-transform:uppercase}
+.sb-logo strong{font-size:16px;font-weight:600;color:#fff}
+.sb-nav{padding:12px 0;flex:1}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;color:#94a3b8;cursor:pointer;transition:all .15s;border-left:3px solid transparent}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#e2e8f0}
+.sb-item.a{background:rgba(99,102,241,.15);color:#818cf8;border-left-color:#6366f1}
+.sb-icon{font-size:16px;width:20px;text-align:center}
+.sb-foot{padding:14px 18px;border-top:1px solid #334155;font-size:11px;color:#475569}
+.main{flex:1;padding:28px;overflow-y:auto}
+.page-title{font-size:22px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+.page-sub{font-size:13px;color:#64748b;margin-bottom:24px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:16px;overflow:hidden}
+.card-hd{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.card-title{font-size:13px;font-weight:600;color:#f1f5f9;display:flex;align-items:center;gap:8px}
+.card-body{padding:16px 18px}
+.rule-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0f172a;border-radius:8px;margin-bottom:6px;border:1px solid #1e293b;transition:border-color .15s}
+.rule-row:hover{border-color:#334155}
+.rule-info{flex:1}
+.rule-label{font-size:13px;font-weight:500;color:#e2e8f0}
+.rule-sub{font-size:11px;color:#64748b;margin-top:2px}
+.rule-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;flex-shrink:0}
+.badge-always{background:#134e4a;color:#6ee7b7}
+.badge-wd{background:#1e3a5f;color:#93c5fd}
+.badge-val{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:none;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s}
+.btn-primary{background:#6366f1;color:#fff}
+.btn-primary:hover{background:#4f46e5}
+.btn-danger{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-ghost{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid #334155}
+.btn-ghost:hover{background:rgba(255,255,255,.1);color:#e2e8f0}
+.btn-success{background:#065f46;color:#6ee7b7}
+.btn-success:hover{background:#064e3b}
+.inp{width:100%;padding:8px 10px;border-radius:7px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px;font-family:inherit;outline:none}
+.inp:focus{border-color:#6366f1}
+.lbl{font-size:11px;color:#64748b;display:block;margin-bottom:4px;font-weight:500}
+.form-grid{display:grid;gap:12px;margin-bottom:14px}
+.form-row{display:flex;gap:10px}
+.form-col{flex:1}
+.tag{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:500}
+.tag-terras{background:#451a03;color:#fb923c}
+.tag-seating{background:#1e1b4b;color:#a5b4fc}
+.tag-ontbijt{background:#14532d;color:#86efac}
+.tag-lunch{background:#1c1917;color:#d6d3d1;border:1px solid #292524}
+.tag-diner{background:#450a0a;color:#fca5a5}
+.divider{height:1px;background:#334155;margin:16px 0}
+.pw-overlay{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:100}
+.pw-box{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:32px;width:340px;text-align:center}
+.pw-logo{font-size:32px;margin-bottom:16px}
+.pw-title{font-size:18px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+.pw-sub{font-size:13px;color:#64748b;margin-bottom:24px}
+.saved-banner{position:fixed;bottom:20px;right:20px;background:#065f46;color:#6ee7b7;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;border:1px solid #047857;animation:slideIn .2s ease;z-index:50}
+@keyframes slideIn{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.drag-handle{color:#475569;cursor:grab;font-size:16px;padding:0 4px;user-select:none}
+.empty{font-size:13px;color:#475569;font-style:italic;padding:12px 0;text-align:center}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const SUPABASE_URL = "https://awnwrntshdjvxduridpo.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3bndybnRzaGRqdnhkdXJpZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNDA4MzMsImV4cCI6MjA5MzgxNjgzM30.wMofHp4inJ5uqEbNxDGuWeWVuq8XwBlMO7L1CB8B0yg";
+
+async function sbGet(key) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/kayuca_store?key=eq.${encodeURIComponent(key)}&select=value`, {
+      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    if (data?.[0]?.value) { localStorage.setItem(key, data[0].value); return data[0].value; }
+    return localStorage.getItem(key);
+  } catch { return localStorage.getItem(key); }
+}
+
+async function sbSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    await fetch(`${SUPABASE_URL}/rest/v1/kayuca_store`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify({ key, value, updated_at: new Date().toISOString() })
+    });
+  } catch { localStorage.setItem(key, value); }
+}
+
+async function sbGetAll() {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/kayuca_store?select=key,value`, {
+      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    if (Array.isArray(data)) {
+      data.forEach(row => { try { localStorage.setItem(row.key, row.value); } catch {} });
+    }
+    return data;
+  } catch { return []; }
+}
+
+const LS_KEY = "kayuca_rules";
+const LS_PREP = "kayuca_prep";
+const LS_EET = "kayuca_eet";
+const LS_BRIEF = "kayuca_briefing";
+const LS_PERS = "kayuca_pers";
+const LS_PREP2 = "kayuca_prep2";
+
+const PREP2_DAG_DEFAULT = () => ({
+  fc: { o: "", l: "", d: "" }, // verwachte couverts
+  regels: [] // [{id, label, conditions: [{maal, op, value}]}]
+});
+
+const PREP2_DEFAULT = () => ({
+  morgen:    PREP2_DAG_DEFAULT(),
+  overmorgen: PREP2_DAG_DEFAULT(),
+  dag3:      PREP2_DAG_DEFAULT()
+});
+
+function loadPrep2(zaak) {
+  try {
+    const s = localStorage.getItem(`${LS_PREP2}_${zaak}`);
+    return s ? JSON.parse(s) : PREP2_DEFAULT();
+  } catch { return PREP2_DEFAULT(); }
+}
+function savePrep2(zaak, data) {
+  const v = JSON.stringify(data);
+  sbSet(`${LS_PREP2}_${zaak}`, v);
+}
+
+const PERS_DEFAULT = () => ({
+  ontbijt: [{ tot: 9999, label: "Warm eten", omschrijving: "" }],
+  lunch:   [{ tot: 9999, label: "Warm eten", omschrijving: "" }],
+  diner:   [{ tot: 9999, label: "Warm eten", omschrijving: "" }]
+});
+
+function loadPers(zaak) {
+  try {
+    const s = localStorage.getItem(`${LS_PERS}_${zaak}`);
+    return s ? JSON.parse(s) : PERS_DEFAULT();
+  } catch { return PERS_DEFAULT(); }
+}
+function savePers(zaak, data) {
+  const v = JSON.stringify(data);
+  sbSet(`${LS_PERS}_${zaak}`, v);
+  return true;
+}
+const LS_SECTIES = "kayuca_secties";
+const LS_RULES_META = "kayuca_rules_meta"; // globale voor-instelling per regel-id
+
+const RULES_META_DEFAULT = {
+  menuO:    { voor:"beide",    wanneer:"dag",   couverts_van:"ontbijt" },
+  brownie:  { voor:"beide",    wanneer:"dag",   couverts_van:"ontbijt" },
+  koffieO:  { voor:"beide",    wanneer:"dag",   couverts_van:"ontbijt" },
+  menuL:    { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  lemonade: { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  keuken:   { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  koffieL:  { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  popcornL: { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  amigoL:   { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  likeL:    { voor:"beide",    wanneer:"dag",   couverts_van:"lunch" },
+  pizza:    { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  shots:    { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  koffieD:  { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  popcornD: { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  amigoD:   { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  likesD:   { voor:"beide",    wanneer:"avond", couverts_van:"diner" },
+  smileO:   { voor:"bediening",wanneer:"dag",   couverts_van:"ontbijt" },
+  smileL:   { voor:"bediening",wanneer:"dag",   couverts_van:"lunch" },
+  smileD:   { voor:"bediening",wanneer:"avond", couverts_van:"diner" },
+};
+
+function loadRulesMeta() {
+  try { const s = localStorage.getItem(LS_RULES_META); const stored = s ? JSON.parse(s) : {}; return {...RULES_META_DEFAULT, ...stored}; } catch { return RULES_META_DEFAULT; }
+}
+function saveRulesMeta(data) {
+  sbSet(LS_RULES_META, JSON.stringify(data));
+}
+
+const SECTIES_DEFAULT = {
+  forecast:      { label: "Forecast",           voor: "beide", wanneer: "beide" },
+  terras:        { label: "Terras (regels)",     voor: "beide", wanneer: "beide" },
+  seating:       { label: "Seating",             voor: "beide", wanneer: "beide" },
+  geven:         { label: "Geven",               voor: "beide", wanneer: "beide" },
+  reserveringen: { label: "Reserveringen",       voor: "beide", wanneer: "beide" },
+  proefdagen:    { label: "Proefdagen",          voor: "beide", wanneer: "beide" },
+  invites:       { label: "Invites",             voor: "bediening", wanneer: "avond" },
+  voorbereiding: { label: "Voorbereiding morgen",voor: "beide", wanneer: "avond" }
+};
+
+function loadSecties() {
+  try { const s = localStorage.getItem(LS_SECTIES); return s ? JSON.parse(s) : SECTIES_DEFAULT; } catch { return SECTIES_DEFAULT; }
+}
+function saveSecties(data) {
+  sbSet(LS_SECTIES, JSON.stringify(data));
+}
+const ADMIN_PW = "admin";
+const ZAKEN = ["BBC","WS","TU","UBU","KAY","HF","PC"];
+const ZAAK_COLORS = {BBC:"#6366f1",WS:"#f59e0b",TU:"#10b981",UBU:"#ef4444",KAY:"#3b82f6",HF:"#a855f7",PC:"#ec4899"};
+const PREP_DEFAULT = { bestek_per: 50, sap_per: 100, sap_liter: 10 };
+const EET_DEFAULT = [
+  { id: "vers", titel: "Vers / nieuw", uitleg: "Eet 30 min voor zijn/haar shift (17:00 start → eet 16:30)" },
+  { id: "door", titel: "Doorstaander", uitleg: "Eet op het overnamemoment van de opvolger (zelfde rol)" },
+  { id: "handmatig", titel: "Handmatig", uitleg: "Gebruik dropdown om af te wijken" }
+];
+
+const ULTRA_LOVE = `Algemeen (LG)
+- Iedereen gedag zeggen
+- Altijd met een smile op de vloer
+- Meelopen naar toilet
+- Help de mensen die zoekend zijn
+- Drankjes binnen 5 minuten op tafel
+- WC altijd picobello!
+- Spreek personeel echt aan, met tips.
+- Check bar en keuken op kwaliteit.
+- UITDELEN, UITDELEN, UITDELEN
+- ALLES mag en ALLES kan. Iedereen mag overal zitten!
+- Zet een stapje extra voor de gasten
+- Interactief briefen: stel de hele dag vragen aan je personeel.
+
+IEDEREEN
+- Deuren openhouden bij aankomst en vertrek
+- Mega enthousiast gedag zeggen
+- Overal een karafje water op tafel
+- Praatjes aan tafel: "waar komen jullie vandaan?" "Lekker met de hond gewandeld?"
+- Hebben ze een hond? Vraag of ze bakje water willen.
+- Houd de zaak netjes: propjes rapen, kelnerbakken leeg, stoelen aanschuiven, kussentjes recht, kaarsjes aan (ook wc)
+
+Kelner
+- Eerste contact snel
+- Extra snelle en vriendelijke service
+- Snel aan tafel en altijd lege glazen mee
+- Rondjes lopen en rode tafels checken
+- Sides erbij vragen, flesje ipv glazen, taartje bij koffie
+- Ga bij klachten altijd naar je LG
+- Leg het menuutje en de specials uit aan tafel (+prijzen en gerechten noemen)
+- Extra vriendelijk: voorbeelden, vertel wat leuks over het menu, vraag food feedback
+- Amigo boekje: schrijf alle leuke mensen in het amigo boekje!
+- GEVEN: vertel wat vandaag wordt uitgedeeld
+- Bon geven bij afrekenen
+- LBO Altijd gelijk afrekenen! (strand)
+- Dessertschaal aanslaan!
+
+Bar
+- Iedereen gedag zeggen!
+- Loop eigen blaadjes
+- Geef drankjes mooi mee
+- Werk schoon
+
+Seater
+- Ontvang iedereen vriendelijk
+- ALLES aannemen, nee is geen antwoord.
+- Deuren openhouden bij aankomst en vertrek
+- Praatje maken met de gast
+- Bij binnen dagen karaf water neerzetten
+- Vraag altijd bread & dip
+- Eerste drankje opnemen als je tijd hebt
+- LEUKE MENSEN LIKEN!
+
+Runner
+- IEDEREEN gedag zeggen en altijd met een SMILE op de vloer.
+- Neem altijd wat mee terug
+- Suikerbakje en koekje vragen bij koffie/thee
+- Wachtende mensen aanspreken: "Hoi, Noah komt je zo ophalen!"
+
+Pas
+- Laatste kwaliteit controle, wees scherp!
+- Loop je eigen gerechten als je tijd hebt
+- Vergeet de pas niet, ook al doe je andere dingen.
+
+Dessert
+- Dessertschaal OP tafel
+- Mooie opmaak desserts (check LG)
+- Zorg dat je dessertschaal altijd gevuld is (2 desserts per soort, kaarsje, bestek)
+- Praatje dessertschaal uitleggen
+- Koffie vragen`;
+
+const LOVE = `Algemeen (LG)
+- Iedereen gedag zeggen
+- Altijd met een smile op de vloer
+- Meelopen naar toilet
+- Help de mensen die zoekend zijn
+- Drankjes binnen 5 minuten op tafel
+- WC altijd picobello!
+- Klachten delen met LG
+
+IEDEREEN
+- Mega enthousiast gedag zeggen
+- Overal een karafje water op tafel
+- Kletsjes aan tafel: "waar komen jullie vandaan?" "Lekker met de hond gewandeld?"
+- Hebben ze een hond? Vraag of ze bakje water willen.
+- Houd de zaak netjes: propjes rapen, kelnerbakken leeg, stoelen aanschuiven, kussentjes recht, kaarsjes aan (ook wc)
+
+Kelner
+- Eerste contact snel + vriendelijk
+- Rondjes lopen, lege glazen en rode tafels checken
+- Sides erbij vragen, flesje ipv glazen, taartje bij koffie
+- Ga bij klachten altijd naar je LG
+- Leg het menuutje en de specials uit aan tafel
+- Extra vriendelijk: voorbeelden, vertel wat leuks over het menu, vraag food feedback
+- Amigo boekje: schrijf alle leuke mensen in het amigo boekje!
+- GEVEN: vertel wat vandaag wordt uitgedeeld
+- Bon geven bij afrekenen
+- LBO Altijd gelijk afrekenen! (strand)
+- Dessertschaal aanslaan
+
+Overloopkelner (de beste kelners)
+- Lege glazen check en rode tafels nalopen
+- Kelner helpen waar nodig
+- Tips geven aan kelners
+
+Seater
+- Ontvang iedereen vriendelijk
+- Bij binnen dagen karaf water neerzetten
+- ALLES aannemen, tenzij stoplicht op rood (check LG)
+- Vraag altijd bread & dip
+- Praatje maken met de gast
+- Seatplan: lounge vrijhouden? Check groepen.
+- LEUKE MENSEN LIKEN!
+- Heb je tijd? Eerste drankje opnemen
+
+Bar
+- Drankjes moeten er tiptop uitzien.
+- Loop zelf en dienblad als je tijd hebt
+- Iedereen gedag zeggen!
+- Drankjes binnen 5 min op tafel.
+
+Runner
+- IEDEREEN gedag zeggen en altijd met een SMILE op de vloer.
+- Neem altijd wat mee terug
+- Haar vast
+- Suikerbakje vragen bij koffie/thee
+- Wachtende mensen aanspreken: "Hoi, Noah komt je zo ophalen!"
+
+Pas
+- Zorg dat gerechten altijd WARM en als eerste meegaan
+- Laatste kwaliteit controle, wees scherp!
+- Zorg dat de runners weten wat ze geven
+- Goed klaarstaan (sausjes, lepels, etc.)
+- Laat runners weten als ze iets anders kunnen gaan doen.
+
+Dessert
+- Dessertschaal OP tafel
+- Mooie opmaak desserts (check LG)
+- Zorg dat je dessertschaal altijd gevuld is (2 desserts per soort, kaarsje, bestek)
+- Praatje dessertschaal uitleggen
+- Koffie vragen
+- Vraag op tijd om hulp!`;
+
+const KNAL = `Algemeen
+- Iedereen gedag zeggen
+- Altijd met een smile op de vloer
+- Meelopen naar toilet
+- Help de mensen die zoekend zijn
+- Drankjes binnen 5 minuten op tafel
+- WC altijd picobello!
+- Klachten delen met LG
+- Houd de zaak binnen schoon, strak en netjes!
+- EV helpt LG constant, maar alles in overleg met LG
+
+Kelner
+- Eerste contact snel
+- Vast rondje lopen
+- Lege glazen, rode tafels
+- Desserts schaal aanslaan!
+- Side dishes verkopen, altijd frietje vragen
+- Foodfeedback vragen
+- Bij klachten altijd naar LG
+- Gelijk indekken met peper en zout
+- Bon geven bij afrekenen
+- LBO altijd gelijk afrekenen! (strand)
+
+Overloopkelner (de beste kelners)
+- Lege glazen check en rode tafels bijhouden
+- Kelner helpen waar nodig
+- Tips geven aan kelners
+- Helpen seaten/runnen waar nodig
+
+Runner
+- IEDEREEN gedag zeggen en altijd met een SMILE op de vloer.
+- Help de mensen die zoekend zijn
+- Geen dienblad ontwijkend gedrag
+- Neem altijd wat mee terug
+- Koekjes en suikerbakje meenemen
+
+Dessert
+- Dessertschaal OP tafel
+- Mooie opmaak desserts (check LG)
+- Praatje dessertschaal uitleggen
+- Koffie vragen
+- Vraag op tijd om hulp!
+- Zorg dat je dessertschaal altijd gevuld is (2 desserts per soort, kaarsje, bestek)
+
+Seater / Host
+- ALTIJD bij de deur (droog = buiten staan)
+- Ontvang iedereen vriendelijk
+- Stoplicht gebruiken, alleen nee bij rood stoplicht
+- Doorsturen naar SB en QR-code kaartje meegeven
+- LEUKE MENSEN LIKEN!
+- Seatplan: check grote groepen en lounges vrijhouden
+
+Bar
+- Besteed tijd aan de looks
+- Iedereen gedag zeggen
+- Barman verantwoordelijk maken snelheid blaadjes
+
+Pas
+- Warme gerechten (steaks) als eerst
+- Laatste kwaliteit controle, wees scherp
+- Zorg dat de runners weten wat ze geven
+- Goed voorbereiden (messen, lepels, soepglaasjes, sides plates, sauzen)`;
+
+const BRIEFING_DEFAULT = zaak => ({
+  lunch: [
+    { tot: 100, naam: "Ultra Love Briefing", tekst: ULTRA_LOVE },
+    { tot: 200, naam: "Love Briefing", tekst: LOVE },
+    { tot: 9999, naam: "Knal Briefing", tekst: KNAL }
+  ],
+  diner: [
+    { tot: 100, naam: "Ultra Love Briefing", tekst: ULTRA_LOVE },
+    { tot: 200, naam: "Love Briefing", tekst: LOVE },
+    { tot: 9999, naam: "Knal Briefing", tekst: KNAL }
+  ]
+});
+
+function loadBriefing(zaak) {
+  try {
+    const s = localStorage.getItem(`${LS_BRIEF}_${zaak}`);
+    return s ? JSON.parse(s) : BRIEFING_DEFAULT(zaak);
+  } catch { return BRIEFING_DEFAULT(zaak); }
+}
+function saveBriefing(zaak, data) {
+  try { const v = JSON.stringify(data); localStorage.setItem(`${LS_BRIEF}_${zaak}`, v); sbSet(`${LS_BRIEF}_${zaak}`, v); return true; } catch { return false; }
+}
+const RULES_DEFAULT = {
+  terras: [{
+    id: "parasol", label: "Parasols open", sub: "Wind onder grens", value: 24, op: "lte", unit: "km/u"
+  }, {
+    id: "plantjes", label: "Plantjes, kaarsjes & pluimen buiten", sub: "Wind onder grens + geen harde regen", value: 35, op: "lt", unit: "km/u"
+  }, {
+    id: "binnen", label: "Binnen gezellig maken", sub: "Altijd", always: true
+  }, {
+    id: "schotten", label: "Schotten plaatsen", sub: "Wind boven grens, niet bij oostenwind", value: 28, op: "gte", unit: "km/u"
+  }],
+  seating: [{
+    id: "smileO", label: "Smile-app — Ontbijt", sub: "Couverts boven grens", value: 50, op: "gt", unit: "couverts"
+  }, {
+    id: "smileL", label: "Smile-app — Lunch", sub: "Couverts boven grens", value: 250, op: "gt", unit: "couverts"
+  }, {
+    id: "smileD", label: "Smile-app — Diner", sub: "Couverts boven grens", value: 200, op: "gt", unit: "couverts"
+  }],
+  geven: [{
+    id: "menuO", label: "Ontbijtmenu €12,50", sub: "Ma t/m vr", weekdayOnly: true, couverts_van: "ontbijt", wanneer: "dag"
+  }, {
+    id: "brownie", label: "Brownie + plaatje", sub: "Couverts onder grens", value: 50, op: "lte", unit: "couverts", hasPhoto: true, couverts_van: "ontbijt", wanneer: "dag"
+  }, {
+    id: "koffieO", label: "Koffie (ontbijt)", sub: "Couverts onder grens", value: 50, op: "lte", unit: "couverts", couverts_van: "ontbijt", wanneer: "dag"
+  }, {
+    id: "menuL", label: "Lunchmenu €12,50", sub: "Couverts onder grens", value: 100, op: "lte", unit: "couverts", couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "lemonade", label: "Lemonade shots", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", hasPhoto: true, couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "keuken", label: "Keukenplank", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "koffieL", label: "Koffies (lunch)", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "popcornL", label: "Popcorn (binnen) lunch", sub: "Couverts onder grens", value: 200, op: "lt", unit: "couverts", couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "amigoL", label: "Amigo (lunch)", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "likeL", label: "Like", sub: "Altijd", always: true, couverts_van: "lunch", wanneer: "dag"
+  }, {
+    id: "pizza", label: "Uitdeelpizza", sub: "Couverts onder grens", value: 200, op: "lt", unit: "couverts", couverts_van: "diner", wanneer: "avond"
+  }, {
+    id: "shots", label: "Shots", sub: "Couverts onder grens", value: 300, op: "lte", unit: "couverts", hasPhoto: true, couverts_van: "diner", wanneer: "avond"
+  }, {
+    id: "koffieD", label: "Koffie (diner)", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", couverts_van: "diner", wanneer: "avond"
+  }, {
+    id: "popcornD", label: "Popcorn (binnen) diner", sub: "Altijd binnen", always: true, couverts_van: "diner", wanneer: "avond"
+  }, {
+    id: "amigoD", label: "Amigo (diner)", sub: "Couverts onder grens", value: 250, op: "lt", unit: "couverts", couverts_van: "diner", wanneer: "avond"
+  }, {
+    id: "likesD", label: "Likes", sub: "Altijd", always: true, couverts_van: "diner", wanneer: "avond"
+  }]
+};
+const LS_CATS = "kayuca_cats";
+const CATS_DEFAULT = [
+  { id: "terras",  label: "Terras",   icon: "🌤", wanneer: "beide" },
+  { id: "seating", label: "Seating",  icon: "🪑", wanneer: "beide" },
+  { id: "geven",   label: "Geven",    icon: "🎁", wanneer: "beide" }
+];
+function loadCats() {
+  try {
+    const s = localStorage.getItem(LS_CATS);
+    if (!s) return CATS_DEFAULT;
+    let cats = JSON.parse(s);
+    // Migreer: verwijder ontbijt/lunch/diner, voeg geven toe als die er nog niet is
+    const oud = ["ontbijt","lunch","diner"];
+    cats = cats.filter(c => !oud.includes(c.id));
+    if (!cats.find(c => c.id === "geven")) {
+      cats.push({ id: "geven", label: "Geven", icon: "🎁", wanneer: "beide" });
+    }
+    return cats;
+  } catch { return CATS_DEFAULT; }
+}
+function saveCats(data) {
+  sbSet(LS_CATS, JSON.stringify(data));
+}
+// Voor achterwaartse compatibiliteit
+const CAT_META = {};
+CATS_DEFAULT.forEach(c => { CAT_META[c.id] = { label: c.label, icon: c.icon }; });
+function loadPrep() {
+  try { const s = localStorage.getItem(LS_PREP); return s ? JSON.parse(s) : PREP_DEFAULT; } catch { return PREP_DEFAULT; }
+}
+function savePrep(p) { sbSet(LS_PREP, JSON.stringify(p)); return true; }
+function loadEet() {
+  try { const s = localStorage.getItem(LS_EET); return s ? JSON.parse(s) : EET_DEFAULT; } catch { return EET_DEFAULT; }
+}
+function saveEet(e) { sbSet(LS_EET, JSON.stringify(e)); return true; }
+function loadRulesForZaak(zaak) {
+  try {
+    const key = zaak ? `${LS_KEY}_${zaak}` : LS_KEY;
+    const s = localStorage.getItem(key);
+    if (!s) return JSON.parse(JSON.stringify(RULES_DEFAULT));
+    const r = JSON.parse(s);
+    // Migreer: voeg ontbijt/lunch/diner regels samen onder geven
+    const oud = ["ontbijt","lunch","diner"];
+    let gevenRules = [...(r.geven || [])];
+    let changed = false;
+    oud.forEach(cat => {
+      if (r[cat]?.length) {
+        r[cat].forEach(rule => {
+          if (!gevenRules.find(g => g.id === rule.id)) {
+            gevenRules.push(rule);
+          }
+        });
+        delete r[cat];
+        changed = true;
+      }
+    });
+    if (changed) {
+      r.geven = gevenRules;
+      localStorage.setItem(key, JSON.stringify(r));
+    }
+    return r;
+  } catch { return JSON.parse(JSON.stringify(RULES_DEFAULT)); }
+}
+function saveRulesForZaak(zaak, rules) {
+  const key = zaak ? `${LS_KEY}_${zaak}` : LS_KEY;
+  sbSet(key, JSON.stringify(rules));
+}
+function loadAllRules() {
+  const all = {};
+  ZAKEN.forEach(z => { all[z] = loadRulesForZaak(z); });
+  return all;
+}
+function loadRules() { return loadRulesForZaak("KAY"); }
+function saveRules(rules) { return saveRulesForZaak("KAY", rules); }
+const EMPTY_RULE = {
+  label: "",
+  sub: "",
+  value: "",
+  unit: "couverts",
+  op: "lt",
+  always: false,
+  weekdayOnly: false,
+  hasPhoto: false
+};
+const VOOR_LABELS = { beide:"Beide", bediening:"Bediening", keuken:"Keuken" };
+const VOOR_COLORS = { beide:"#6366f1", bediening:"#f59e0b", keuken:"#10b981" };
+
+function RulesTable({ cat, catRules, allRules, rulesMeta, onCellClick, onReorder, onPhotoUpdate }) {
+  // Voor geven: groepeer op couverts_van
+  const groepen = cat === "geven" ? [
+    { key: "ontbijt", label: "☕ Ontbijt", color: "#f59e0b" },
+    { key: "lunch",   label: "🥗 Lunch",   color: "#10b981" },
+    { key: "diner",   label: "🍽 Diner",   color: "#ef4444" },
+    { key: "hoogste", label: "📊 Hoogste / Overig", color: "#64748b" }
+  ] : null;
+
+  const getGroep = rule => rulesMeta?.[rule.id]?.couverts_van || rule.couverts_van || "hoogste";
+
+  if (groepen) {
+    // Render per groep een aparte tabel
+    return /*#__PURE__*/React.createElement("div", {style:{display:"flex",flexDirection:"column",gap:16}},
+      groepen.map(groep => {
+        const groepRules = catRules.filter(r => getGroep(r) === groep.key);
+        if (!groepRules.length) return null;
+        return /*#__PURE__*/React.createElement("div", {key:groep.key},
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:8,marginBottom:8}},
+            /*#__PURE__*/React.createElement("div", {style:{width:3,height:16,borderRadius:2,background:groep.color}}),
+            /*#__PURE__*/React.createElement("span", {style:{fontSize:13,fontWeight:700,color:groep.color}}, groep.label)
+          ),
+          /*#__PURE__*/React.createElement(RulesTableInner, {
+            cat, catRules: groepRules, allCatRules: catRules,
+            allRules, rulesMeta, onCellClick, onReorder, onPhotoUpdate
+          })
+        );
+      })
+    );
+  }
+
+  return /*#__PURE__*/React.createElement(RulesTableInner, {
+    cat, catRules, allCatRules: catRules,
+    allRules, rulesMeta, onCellClick, onReorder, onPhotoUpdate
+  });
+}
+
+function RulesTableInner({ cat, catRules, allCatRules, allRules, rulesMeta, onCellClick, onReorder, onPhotoUpdate }) {
+  return /*#__PURE__*/React.createElement("div", {style:{overflowX:"auto"}},
+    /*#__PURE__*/React.createElement("table", {style:{width:"100%",borderCollapse:"collapse",background:"#1e293b",borderRadius:12,overflow:"hidden",border:"1px solid #334155"}},
+      /*#__PURE__*/React.createElement("thead", null,
+        /*#__PURE__*/React.createElement("tr", null,
+          /*#__PURE__*/React.createElement("th", {style:{padding:"12px 16px",textAlign:"left",fontSize:12,color:"#64748b",fontWeight:600,background:"#0f172a",borderBottom:"1px solid #334155",minWidth:180}}, "Regel"),
+          /*#__PURE__*/React.createElement("th", {style:{padding:"10px 12px",textAlign:"center",fontSize:12,fontWeight:600,background:"#0f172a",borderBottom:"1px solid #334155",borderLeft:"1px solid #334155",minWidth:100,color:"#64748b"}}, "Voor"),
+          cat === "geven" && /*#__PURE__*/React.createElement("th", {style:{padding:"10px 12px",textAlign:"center",fontSize:12,fontWeight:600,background:"#0f172a",borderBottom:"1px solid #334155",borderLeft:"1px solid #334155",minWidth:80,color:"#64748b"}}, "📷 Foto"),
+          ZAKEN.map(z => /*#__PURE__*/React.createElement("th", {key:z,style:{padding:"10px 12px",textAlign:"center",fontSize:12,fontWeight:700,background:"#0f172a",borderBottom:"1px solid #334155",borderLeft:"1px solid #334155",minWidth:90}},
+            /*#__PURE__*/React.createElement("span", {style:{display:"inline-block",padding:"3px 10px",borderRadius:20,background:ZAAK_COLORS[z]+"22",color:ZAAK_COLORS[z],border:`1px solid ${ZAAK_COLORS[z]}44`}}, z)
+          ))
+        )
+      ),
+      /*#__PURE__*/React.createElement("tbody", null,
+        catRules.length === 0 && /*#__PURE__*/React.createElement("tr", null,
+          /*#__PURE__*/React.createElement("td", {colSpan:ZAKEN.length+2,style:{padding:24,textAlign:"center",color:"#475569",fontStyle:"italic"}}, "Geen regels")
+        ),
+        catRules.map((baseRule, i) => {
+          const globalIdx = allCatRules.findIndex(r => r.id === baseRule.id);
+          const voor = (rulesMeta?.[baseRule.id]?.voor) || baseRule.voor || "beide";
+          const voorColor = VOOR_COLORS[voor] || "#6366f1";
+          return /*#__PURE__*/React.createElement("tr", {key:baseRule.id,style:{background:i%2===0?"#1e293b":"#162032"}},
+            /*#__PURE__*/React.createElement("td", {style:{padding:"10px 16px",borderBottom:"1px solid #1e293b"}},
+              /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:6}},
+                onReorder && /*#__PURE__*/React.createElement("div", {style:{display:"flex",flexDirection:"column",gap:1}},
+                  /*#__PURE__*/React.createElement("button", {
+                    onClick:()=>onReorder(baseRule.id,-1),
+                    style:{background:"none",border:"1px solid #334155",borderRadius:3,color:globalIdx===0?"#334155":"#64748b",cursor:globalIdx===0?"default":"pointer",padding:"0 4px",fontSize:10,lineHeight:"14px"}
+                  },"↑"),
+                  /*#__PURE__*/React.createElement("button", {
+                    onClick:()=>onReorder(baseRule.id,1),
+                    style:{background:"none",border:"1px solid #334155",borderRadius:3,color:globalIdx===allCatRules.length-1?"#334155":"#64748b",cursor:globalIdx===allCatRules.length-1?"default":"pointer",padding:"0 4px",fontSize:10,lineHeight:"14px"}
+                  },"↓")
+                ),
+                /*#__PURE__*/React.createElement("div", null,
+                  /*#__PURE__*/React.createElement("div", {style:{fontSize:13,fontWeight:500,color:"#e2e8f0"}}, baseRule.label),
+                  baseRule.sub && /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",marginTop:2}}, baseRule.sub)
+                )
+              )
+            ),
+            /*#__PURE__*/React.createElement("td", {style:{padding:"8px 10px",textAlign:"center",borderBottom:"1px solid #1e293b",borderLeft:"1px solid #1e293b"}},
+              /*#__PURE__*/React.createElement("div", {style:{display:"flex",flexDirection:"column",gap:3,alignItems:"center"}},
+                /*#__PURE__*/React.createElement("span", {style:{fontSize:10,padding:"2px 8px",borderRadius:20,background:voorColor+"22",color:voorColor,border:`1px solid ${voorColor}44`,fontWeight:600}}, VOOR_LABELS[voor]),
+                (()=>{
+                  const w = (rulesMeta?.[baseRule.id]?.wanneer)||"beide";
+                  const wc = {beide:"#3b82f6",dag:"#f59e0b",avond:"#8b5cf6"};
+                  const wl = {beide:"Beide",dag:"Dag",avond:"Avond"};
+                  return w !== "beide" && /*#__PURE__*/React.createElement("span", {style:{fontSize:9,padding:"1px 6px",borderRadius:20,background:wc[w]+"22",color:wc[w],fontWeight:600}}, wl[w]);
+                })()
+              )
+            ),
+            cat === "geven" && /*#__PURE__*/React.createElement("td", {style:{padding:"8px 10px",textAlign:"center",borderBottom:"1px solid #1e293b",borderLeft:"1px solid #1e293b"}},
+              onPhotoUpdate && /*#__PURE__*/React.createElement("label", {style:{cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3}},
+                rulesMeta?.[baseRule.id]?.photo
+                  ? /*#__PURE__*/React.createElement("div", {style:{position:"relative"}},
+                      /*#__PURE__*/React.createElement("img", {src:rulesMeta[baseRule.id].photo, style:{width:36,height:36,objectFit:"cover",borderRadius:6,display:"block"}}),
+                      /*#__PURE__*/React.createElement("button", {
+                        onClick:e=>{e.preventDefault();e.stopPropagation();onPhotoUpdate(baseRule.id, null);},
+                        style:{position:"absolute",top:-4,right:-4,background:"#ef4444",border:"none",color:"#fff",borderRadius:10,width:14,height:14,fontSize:8,cursor:"pointer",lineHeight:"14px",textAlign:"center"}
+                      }, "✕")
+                    )
+                  : /*#__PURE__*/React.createElement("span", {style:{fontSize:18,opacity:.4}}, "📷"),
+                /*#__PURE__*/React.createElement("input", {type:"file",accept:"image/*",style:{display:"none"},
+                  onChange:e=>{
+                    const file = e.target.files?.[0];
+                    if(!file) return;
+                    const reader = new FileReader();
+                    reader.onload = ev => onPhotoUpdate(baseRule.id, ev.target.result);
+                    reader.readAsDataURL(file);
+                  }
+                })
+              )
+            ),
+            ZAKEN.map(z => {
+              const zaakRule = (allRules[z]?.[cat] || []).find(r => r.id === baseRule.id);
+              const hasRule = !!zaakRule;
+              const inactive = zaakRule?.inactive;
+              const isAlways = zaakRule?.always || zaakRule?.weekdayOnly;
+              return /*#__PURE__*/React.createElement("td", {key:z,
+                style:{padding:"8px 10px",textAlign:"center",borderBottom:"1px solid #1e293b",borderLeft:"1px solid #1e293b",cursor:"pointer",opacity:inactive?0.4:1},
+                onClick:()=>onCellClick(z, cat, zaakRule || {...baseRule})
+              },
+                !hasRule ? /*#__PURE__*/React.createElement("span", {style:{color:"#334155",fontSize:18}}, "—") :
+                inactive ? /*#__PURE__*/React.createElement("span", {style:{fontSize:10,padding:"2px 8px",borderRadius:20,background:"#450a0a",color:"#fca5a5",fontWeight:600}}, "Inactief") :
+                isAlways ? /*#__PURE__*/React.createElement("span", {style:{fontSize:10,padding:"2px 8px",borderRadius:20,background:"#134e4a",color:"#6ee7b7",fontWeight:600}}, zaakRule.weekdayOnly?"Ma–vr":"Altijd") :
+                /*#__PURE__*/React.createElement("div", null,
+                  /*#__PURE__*/React.createElement("div", {style:{fontSize:15,fontWeight:700,color:ZAAK_COLORS[z]}}, zaakRule.value),
+                  /*#__PURE__*/React.createElement("div", {style:{fontSize:9,color:"#64748b"}}, zaakRule.op==="lt"?"<":zaakRule.op==="lte"?"≤":zaakRule.op==="gt"?">":"≥", " ", zaakRule.unit)
+                )
+              );
+            })
+          );
+        })
+      )
+    )
+  );
+}
+
+function CellModal({ zaak, cat, rule, allRules, onSave, onDelete, onClose }) {
+  const [form, setForm] = useState({ voor: "beide", ...rule });
+  const f = k => v => setForm(p => ({ ...p, [k]: v }));
+  const color = ZAAK_COLORS[zaak];
+  return /*#__PURE__*/React.createElement("div", {style:{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}},
+    /*#__PURE__*/React.createElement("div", {style:{background:"#1e293b",border:`1px solid ${color}44`,borderTop:`3px solid ${color}`,borderRadius:14,width:"100%",maxWidth:440,overflow:"hidden"}},
+      /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}},
+        /*#__PURE__*/React.createElement("div", null,
+          /*#__PURE__*/React.createElement("span", {style:{display:"inline-block",padding:"2px 10px",borderRadius:20,background:color+"22",color,fontWeight:700,fontSize:12,marginRight:8}}, zaak),
+          /*#__PURE__*/React.createElement("strong", {style:{color:"#f1f5f9",fontSize:14}}, rule.label)
+        ),
+        /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",style:{padding:"3px 10px"},onClick:onClose}, "\u2715")
+      ),
+      /*#__PURE__*/React.createElement("div", {style:{padding:18}},
+        /*#__PURE__*/React.createElement("div", {className:"form-grid"},
+          /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",borderRadius:8,padding:"10px 12px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+            /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0",fontWeight:500}}, "Actief voor "+zaak),
+            /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}},
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:12,color:form.inactive?"#f87171":"#6ee7b7"}}, form.inactive?"Inactief":"Actief"),
+              /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:!form.inactive,onChange:e=>f("inactive")(!e.target.checked),style:{width:16,height:16,cursor:"pointer"}})
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Zichtbaar in worksheet"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              ["beide","bediening","keuken"].map(v => /*#__PURE__*/React.createElement("button", {key:v,
+                style:{flex:1,padding:"7px 4px",borderRadius:7,border:`1px solid ${form.voor===v?VOOR_COLORS[v]:"#334155"}`,background:form.voor===v?VOOR_COLORS[v]+"22":"#0f172a",color:form.voor===v?VOOR_COLORS[v]:"#64748b",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+                onClick:()=>f("voor")(v)
+              }, VOOR_LABELS[v]))
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Zichtbaar wanneer"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              ["beide","dag","avond"].map(v => {
+                const wc = {beide:"#3b82f6",dag:"#f59e0b",avond:"#8b5cf6"};
+                const w = form.wanneer||"beide";
+                return /*#__PURE__*/React.createElement("button", {key:v,
+                  style:{flex:1,padding:"7px 4px",borderRadius:7,border:`1px solid ${w===v?wc[v]:"#334155"}`,background:w===v?wc[v]+"22":"#0f172a",color:w===v?wc[v]:"#64748b",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+                  onClick:()=>f("wanneer")(v)
+                }, v==="beide"?"Beide":v==="dag"?"Dag":"Avond");
+              })
+            )
+          ),
+          !form.inactive && !form.inactive && /*#__PURE__*/React.createElement("div", null,            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Couverts van"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              ["hoogste","ontbijt","lunch","diner"].map(v => {
+                const cc = {hoogste:"#64748b",ontbijt:"#f59e0b",lunch:"#10b981",diner:"#ef4444"};
+                const cl = {hoogste:"Hoogste",ontbijt:"Ontbijt",lunch:"Lunch",diner:"Diner"};
+                const cur = form.couverts_van||"hoogste";
+                return /*#__PURE__*/React.createElement("button", {key:v,
+                  style:{flex:1,padding:"7px 4px",borderRadius:7,border:`1px solid ${cur===v?cc[v]:"#334155"}`,background:cur===v?cc[v]+"22":"#0f172a",color:cur===v?cc[v]:"#64748b",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+                  onClick:()=>f("couverts_van")(v)
+                }, cl[v]);
+              })
+            )
+          ),
+          !form.inactive && /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:10}},
+            /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+              /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:!!form.always,onChange:e=>setForm(p=>({...p,always:e.target.checked,weekdayOnly:false}))}), "Altijd actief"),
+            /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+              /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:!!form.weekdayOnly,onChange:e=>setForm(p=>({...p,weekdayOnly:e.target.checked,always:false}))}), "Alleen ma–vr")
+          ),
+          !form.inactive && /*#__PURE__*/React.createElement("div", {className:"form-row"},
+            /*#__PURE__*/React.createElement("div", {className:"form-col"},
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Grenswaarde"),
+              /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",value:form.value,onChange:e=>f("value")(e.target.value)})
+            ),
+            /*#__PURE__*/React.createElement("div", {className:"form-col"},
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Operator"),
+              /*#__PURE__*/React.createElement("select", {className:"inp",value:form.op,onChange:e=>f("op")(e.target.value)},
+                /*#__PURE__*/React.createElement("option", {value:"lt"}, "Kleiner dan (<)"),
+                /*#__PURE__*/React.createElement("option", {value:"lte"}, "Max (\u2264)"),
+                /*#__PURE__*/React.createElement("option", {value:"gt"}, "Groter dan (>)"),
+                /*#__PURE__*/React.createElement("option", {value:"gte"}, "Min (\u2265)")
+              )
+            )
+          ),
+          cat === "diner" && !form.inactive && !form.always && !form.weekdayOnly && /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+            /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:!!form.ookLunch,onChange:e=>f("ookLunch")(e.target.checked)}),
+            "Ook lunch meechecken"
+          ),
+          !form.inactive && /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "📷 Foto (zichtbaar in worksheet)"),
+            form.photo && /*#__PURE__*/React.createElement("div", {style:{marginBottom:8,position:"relative",display:"inline-block"}},
+              /*#__PURE__*/React.createElement("img", {src:form.photo, style:{width:"100%",maxHeight:160,objectFit:"cover",borderRadius:8,display:"block"}}),
+              /*#__PURE__*/React.createElement("button", {
+                onClick:()=>f("photo")(null),
+                style:{position:"absolute",top:4,right:4,background:"rgba(0,0,0,.6)",border:"none",color:"#fff",borderRadius:20,width:22,height:22,cursor:"pointer",fontSize:12,lineHeight:"22px",textAlign:"center"}
+              }, "✕")
+            ),
+            /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:8,cursor:"pointer",padding:"8px 12px",border:"1px dashed #334155",borderRadius:8,color:"#64748b",fontSize:12}},
+              /*#__PURE__*/React.createElement("input", {type:"file",accept:"image/*",style:{display:"none"},
+                onChange: e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = ev => f("photo")(ev.target.result);
+                  reader.readAsDataURL(file);
+                }
+              }),
+              form.photo ? "📷 Andere foto kiezen" : "📷 Foto uploaden"
+            )
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,justifyContent:"space-between",marginTop:8}},
+          /*#__PURE__*/React.createElement("button", {className:"btn btn-danger",onClick:()=>onDelete(zaak,cat,rule.id)}, "Verwijder voor "+zaak),
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8}},
+            /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",onClick:onClose}, "Annuleer"),
+            /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",onClick:()=>{
+              onSave(zaak, cat, {...form, value:parseFloat(form.value)||0});
+            }}, "Opslaan")
+          )
+        )
+      )
+    )
+  );
+}
+function AddRulePanel({ cat, allRules, onAdd }) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ label:"", sub:"", value:"", unit:"couverts", op:"lt", always:false, weekdayOnly:false, voor:"beide", wanneer:"beide", couverts_van:"hoogste", ookLunch:false, hasPhoto:false });
+  const [zaken, setZaken] = useState(new Set(ZAKEN));
+  const f = k => v => setForm(p => ({...p, [k]: v}));
+  const toggle = z => setZaken(prev => { const n = new Set(prev); n.has(z) ? n.delete(z) : n.add(z); return n; });
+
+  if (!open) return /*#__PURE__*/React.createElement("button", {
+    onClick: () => setOpen(true),
+    style:{marginTop:12,width:"100%",padding:"10px",borderRadius:8,border:"2px dashed #334155",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}
+  }, "+ Nieuwe regel toevoegen");
+
+  return /*#__PURE__*/React.createElement("div", {style:{marginTop:12,background:"#1e293b",border:"1px solid #334155",borderRadius:12,overflow:"hidden"}},
+    /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"12px 16px",fontSize:13,fontWeight:600,color:"#f1f5f9"}}, "Nieuwe regel toevoegen"),
+    /*#__PURE__*/React.createElement("div", {style:{padding:16,display:"flex",flexDirection:"column",gap:12}},
+      /*#__PURE__*/React.createElement("div", {className:"form-row"},
+        /*#__PURE__*/React.createElement("div", {className:"form-col"},
+          /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Label"),
+          /*#__PURE__*/React.createElement("input", {className:"inp",type:"text",placeholder:"Naam van de regel...",value:form.label,onChange:e=>f("label")(e.target.value)})
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"form-col"},
+          /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Subtitel"),
+          /*#__PURE__*/React.createElement("input", {className:"inp",type:"text",placeholder:"Omschrijving...",value:form.sub,onChange:e=>f("sub")(e.target.value)})
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:12}},
+        /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+          /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:form.always,onChange:e=>setForm(p=>({...p,always:e.target.checked,weekdayOnly:false}))}), "Altijd actief"),
+        /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+          /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:form.weekdayOnly,onChange:e=>setForm(p=>({...p,weekdayOnly:e.target.checked,always:false}))}), "Alleen ma–vr")
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"form-row"},
+        /*#__PURE__*/React.createElement("div", {className:"form-col"},
+          /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Grenswaarde"),
+          /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",value:form.value,onChange:e=>f("value")(e.target.value)})
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"form-col"},
+          /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Eenheid"),
+          /*#__PURE__*/React.createElement("select", {className:"inp",value:form.unit,onChange:e=>f("unit")(e.target.value)},
+            /*#__PURE__*/React.createElement("option", {value:"couverts"}, "couverts"),
+            /*#__PURE__*/React.createElement("option", {value:"km/u"}, "km/u")
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"form-col"},
+          /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Operator"),
+          /*#__PURE__*/React.createElement("select", {className:"inp",value:form.op,onChange:e=>f("op")(e.target.value)},
+            /*#__PURE__*/React.createElement("option", {value:"lt"}, "< kleiner dan"),
+            /*#__PURE__*/React.createElement("option", {value:"lte"}, "\u2264 max"),
+            /*#__PURE__*/React.createElement("option", {value:"gt"}, "> groter dan"),
+            /*#__PURE__*/React.createElement("option", {value:"gte"}, "\u2265 min")
+          )
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Zichtbaar in"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+          ["beide","bediening","keuken"].map(v => /*#__PURE__*/React.createElement("button", {key:v,
+            style:{flex:1,padding:"6px",borderRadius:7,border:`1px solid ${form.voor===v?VOOR_COLORS[v]:"#334155"}`,background:form.voor===v?VOOR_COLORS[v]+"22":"#0f172a",color:form.voor===v?VOOR_COLORS[v]:"#64748b",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+            onClick:()=>f("voor")(v)
+          }, VOOR_LABELS[v]))
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Zichtbaar wanneer"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+          ["beide","dag","avond"].map(v => {
+            const wc = {beide:"#3b82f6",dag:"#f59e0b",avond:"#8b5cf6"};
+            return /*#__PURE__*/React.createElement("button", {key:v,
+              style:{flex:1,padding:"6px",borderRadius:7,border:`1px solid ${form.wanneer===v?wc[v]:"#334155"}`,background:form.wanneer===v?wc[v]+"22":"#0f172a",color:form.wanneer===v?wc[v]:"#64748b",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+              onClick:()=>f("wanneer")(v)
+            }, v==="beide"?"Beide":v==="dag"?"Dag":"Avond");
+          })
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Couverts van"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+          ["hoogste","ontbijt","lunch","diner"].map(v => {
+            const cc = {hoogste:"#64748b",ontbijt:"#f59e0b",lunch:"#10b981",diner:"#ef4444"};
+            const cl = {hoogste:"Hoogste",ontbijt:"Ontbijt",lunch:"Lunch",diner:"Diner"};
+            return /*#__PURE__*/React.createElement("button", {key:v,
+              style:{flex:1,padding:"6px",borderRadius:7,border:`1px solid ${form.couverts_van===v?cc[v]:"#334155"}`,background:form.couverts_van===v?cc[v]+"22":"#0f172a",color:form.couverts_van===v?cc[v]:"#64748b",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"},
+              onClick:()=>f("couverts_van")(v)
+            }, cl[v]);
+          })
+        )
+      ),
+      cat === "diner" && !form.always && !form.weekdayOnly && /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+        /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:form.ookLunch,onChange:e=>f("ookLunch")(e.target.checked)}),
+        "Ook lunch meechecken"
+      ),
+      /*#__PURE__*/React.createElement("label", {style:{display:"flex",alignItems:"center",gap:6,cursor:"pointer",fontSize:13,color:"#e2e8f0"}},
+        /*#__PURE__*/React.createElement("input", {type:"checkbox",checked:form.hasPhoto,onChange:e=>f("hasPhoto")(e.target.checked)}),
+        "📷 Foto toevoegen mogelijk in worksheet"
+      ),
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Toevoegen aan zaken"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}},
+          ZAKEN.map(z => /*#__PURE__*/React.createElement("button", {key:z,
+            style:{padding:"4px 12px",borderRadius:20,border:`1px solid ${ZAAK_COLORS[z]}`,background:zaken.has(z)?ZAAK_COLORS[z]:"transparent",color:zaken.has(z)?"#fff":ZAAK_COLORS[z],fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:"inherit"},
+            onClick:()=>toggle(z)
+          }, z))
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8}},
+        /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",onClick:()=>setOpen(false)}, "Annuleer"),
+        /*#__PURE__*/React.createElement("button", {
+          className:"btn btn-primary",
+          onClick:()=>{
+            if(!form.label) return;
+            const newRule = {...form, value:parseFloat(form.value)||0, id:"r_"+Date.now()};
+            onAdd(cat, newRule, Array.from(zaken));
+            setForm({label:"",sub:"",value:"",unit:"couverts",op:"lt",always:false,weekdayOnly:false,voor:"beide",wanneer:"beide",couverts_van:"hoogste",ookLunch:false,hasPhoto:false});
+            setOpen(false);
+          }
+        }, "Regel toevoegen aan "+zaken.size+" zaken")
+      )
+    )
+  );
+}
+
+function App() {
+  const [auth, setAuth] = useState(false);
+  const [pw, setPw] = useState("");
+  const [pwErr, setPwErr] = useState(false);
+  const [allRules, setAllRules] = useState(loadAllRules);
+  const [prep, setPrep] = useState(loadPrep);
+  const [eet, setEet] = useState(loadEet);
+  const [page, setPage] = useState("terras");
+  const [editCell, setEditCell] = useState(null); // {zaak, cat, rule}
+  const [saved, setSaved] = useState(false);
+  const [savedPw, setSavedPw] = useState(ADMIN_PW);
+
+  const flash = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+
+  // Sync alle lokale data naar Supabase bij startup
+  useEffect(() => {
+    const syncLocalToSupabase = async () => {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith("kayuca_"));
+      for (const key of keys) {
+        const value = localStorage.getItem(key);
+        if (value) await sbSet(key, value);
+      }
+      // Force sync briefings voor alle zaken
+      const ZAKEN_LIST = ["BBC","WS","TU","UBU","KAY","HF","PC"];
+      for (const z of ZAKEN_LIST) {
+        const bKey = "kayuca_briefing_"+z;
+        const bVal = localStorage.getItem(bKey);
+        if (bVal) await sbSet(bKey, bVal);
+      }
+    };
+    // Laad eerst van Supabase, dan sync lokaal
+    sbGetAll().then(rows => {
+      if (!Array.isArray(rows) || !rows.length) {
+        // Supabase is leeg - upload lokale data
+        syncLocalToSupabase();
+        return;
+      }
+      // Supabase heeft data - laad die in
+      try {
+        const get = key => { const r = rows.find(x => x.key === key); return r ? JSON.parse(r.value) : null; };
+        const prep = get(LS_PREP); if(prep) setPrep(prep);
+        const eet = get(LS_EET); if(eet) setEet(eet);
+        const secties = get(LS_SECTIES); if(secties) setSecties(secties);
+        const cats = get(LS_CATS); if(cats) setCats(cats);
+        const meta = get(LS_RULES_META); if(meta) setRulesMeta(meta);
+        const newAllRules = {};
+        ZAKEN.forEach(z => { const r = get(`${LS_KEY}_${z}`); if(r) newAllRules[z] = r; });
+        if(Object.keys(newAllRules).length) setAllRules(prev => ({...prev, ...newAllRules}));
+        const newBrief = {};
+        ZAKEN.forEach(z => { const b = get(`${LS_BRIEF}_${z}`); if(b) newBrief[z] = b; });
+        if(Object.keys(newBrief).length) setBrief(prev => ({...prev, ...newBrief}));
+        const newPers = {};
+        ZAKEN.forEach(z => { const p = get(`${LS_PERS}_${z}`); if(p) newPers[z] = p; });
+        if(Object.keys(newPers).length) setPers(prev => ({...prev, ...newPers}));
+        const newPrep2 = {};
+        ZAKEN.forEach(z => { const p = get(`${LS_PREP2}_${z}`); if(p) newPrep2[z] = p; });
+        if(Object.keys(newPrep2).length) setPrep2(prev => ({...prev, ...newPrep2}));
+        // Nu ook lokale data uploaden (zodat nieuwe lokale wijzigingen niet verloren gaan)
+        syncLocalToSupabase();
+      } catch(e) { console.error('Supabase init error:', e); }
+    });
+  }, []);
+
+  const persistZaak = (zaak, rules) => {
+    setAllRules(prev => ({ ...prev, [zaak]: rules }));
+    saveRulesForZaak(zaak, rules);
+    flash();
+  };
+
+  const persistPrep = p => { setPrep(p); savePrep(p); flash(); };
+  const [prep2, setPrep2] = useState(() => {
+    const all = {};
+    ZAKEN.forEach(z => { all[z] = loadPrep2(z); });
+    return all;
+  });
+  const [prep2Zaak, setPrep2Zaak] = useState("KAY");
+  const [prep2Dag, setPrep2Dag] = useState("morgen");
+  const [prep2EditRegel, setPrep2EditRegel] = useState(null);
+
+  const persistPrep2 = (zaak, data) => {
+    setPrep2(prev => ({...prev, [zaak]: data}));
+    savePrep2(zaak, data);
+    flash();
+  };
+
+  const [pers, setPers] = useState(() => {
+    const all = {};
+    ZAKEN.forEach(z => { all[z] = loadPers(z); });
+    return all;
+  });
+  const [persZaak, setPersZaak] = useState("KAY");
+  const [persMaal, setPersMaal] = useState("ontbijt");
+
+  const persistPers = (zaak, data) => {
+    setPers(prev => ({...prev, [zaak]: data}));
+    savePers(zaak, data);
+    flash();
+  };
+  const [brief, setBrief] = useState(() => {
+    const all = {};
+    ZAKEN.forEach(z => { all[z] = loadBriefing(z); });
+    return all;
+  });
+  const [briefZaak, setBriefZaak] = useState("KAY");
+  const [briefMaal, setBriefMaal] = useState("lunch");
+  const [briefEdit, setBriefEdit] = useState(null);
+  const [bulkBrief, setBulkBrief] = useState(null); // {maal, zaken, idx, tekst}
+
+  const persistBrief = (zaak, data) => {
+    setBrief(prev => ({...prev, [zaak]: data}));
+    saveBriefing(zaak, data);
+    flash();
+  };
+  const [rulesMeta, setRulesMeta] = useState(loadRulesMeta);
+  const persistMeta = meta => { setRulesMeta(meta); saveRulesMeta(meta); flash(); };
+  const [secties, setSecties] = useState(loadSecties);
+  const persistSecties = data => { setSecties(data); saveSecties(data); flash(); };
+
+  const handleLogin = () => {
+    if (pw === savedPw) { setAuth(true); setPwErr(false); }
+    else setPwErr(true);
+  };
+
+  // Alle regelIDs + labels verzamelen over alle zaken heen per categorie
+  const [cats, setCats] = useState(loadCats);
+  const persistCats = data => { setCats(data); saveCats(data); flash(); };
+
+  const getCatMeta = id => cats.find(c => c.id === id) || { label: id, icon: "📋" };
+  const getCatRules = cat => {
+    const seen = new Map();
+    ZAKEN.forEach(z => {
+      (allRules[z]?.[cat] || []).forEach(r => {
+        if (!seen.has(r.id)) seen.set(r.id, r);
+      });
+    });
+    return Array.from(seen.values());
+  };
+
+  const navItems = [
+    ...cats.map(c => ({ key: c.id, icon: c.icon || "📋", label: c.label })),
+    { key: "categorieen", icon: "⚙", label: "Categorieën" },
+    { key: "voorbereiding", icon: "🗂", label: "Voorbereiding" },
+    { key: "eetlijst", icon: "🍽", label: "Eetlijst" },
+    { key: "briefing", icon: "📋", label: "Briefing" },
+    { key: "voorbereiding2", icon: "📅", label: "Voorbereiding" },
+    { key: "personeelseten", icon: "🍱", label: "Personeelseten" },
+    { key: "secties", icon: "👁", label: "Secties" },
+    { key: "pw", icon: "🔑", label: "Wachtwoord" }
+  ];
+
+  if (!auth) {
+    return /*#__PURE__*/React.createElement("div", {className:"pw-overlay"},
+      /*#__PURE__*/React.createElement("div", {className:"pw-box"},
+        /*#__PURE__*/React.createElement("div", {className:"pw-logo"}, "\uD83D\uDD10"),
+        /*#__PURE__*/React.createElement("div", {className:"pw-title"}, "Multi-Zaak Admin"),
+        /*#__PURE__*/React.createElement("div", {className:"pw-sub"}, "Beheer van regels voor alle zaken"),
+        /*#__PURE__*/React.createElement("input", {className:"inp",type:"password",placeholder:"Wachtwoord...",value:pw,
+          onChange:e=>{setPw(e.target.value);setPwErr(false);},
+          onKeyDown:e=>{if(e.key==="Enter")handleLogin();},
+          style:{marginBottom:8,textAlign:"center"}}),
+        pwErr && /*#__PURE__*/React.createElement("div", {style:{fontSize:12,color:"#f87171",marginBottom:8}}, "Onjuist wachtwoord"),
+        /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",style:{width:"100%",justifyContent:"center",padding:"10px"},onClick:handleLogin}, "Inloggen")
+      )
+    );
+  }
+
+  return /*#__PURE__*/React.createElement("div", {className:"layout"},
+    saved && /*#__PURE__*/React.createElement("div", {className:"saved-banner"}, "✓ Opgeslagen"),
+    bulkBrief && /*#__PURE__*/React.createElement("div", {style:{position:"fixed",inset:0,background:"rgba(0,0,0,.8)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:16}},
+      /*#__PURE__*/React.createElement("div", {style:{background:"#1e293b",border:"1px solid #334155",borderRadius:14,width:"100%",maxWidth:560,overflow:"hidden",maxHeight:"90vh",display:"flex",flexDirection:"column"}},
+        /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}},
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:15,fontWeight:700,color:"#f1f5f9"}}, "✏ Bewerk voor meerdere zaken"),
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",marginTop:2}}, "Selecteer zaken en briefing — wijziging overschrijft bestaande tekst")
+          ),
+          /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",style:{padding:"3px 10px"},onClick:()=>setBulkBrief(null)}, "✕")
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{padding:18,overflowY:"auto",flex:1}},
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Maaltijd"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              ["lunch","diner","beide"].map(m => /*#__PURE__*/React.createElement("button", {key:m,
+                onClick:()=>setBulkBrief(p=>({...p,maal:m})),
+                style:{flex:1,padding:"7px",borderRadius:8,border:`1px solid ${bulkBrief.maal===m?"#3b82f6":"#334155"}`,background:bulkBrief.maal===m?"#1d4ed822":"#0f172a",color:bulkBrief.maal===m?"#60a5fa":"#64748b",fontWeight:600,fontSize:13,cursor:"pointer",fontFamily:"inherit",textTransform:"capitalize"}
+              }, m==="beide"?"Beide (dag+avond)":m))
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Briefing nummer (drempel)"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}},
+              (brief[briefZaak]?.[bulkBrief.maal]||[]).map((b,i) => /*#__PURE__*/React.createElement("button", {key:i,
+                onClick:()=>setBulkBrief(p=>({...p,idx:i,tekst:b.tekst})),
+                style:{padding:"5px 12px",borderRadius:8,border:`1px solid ${bulkBrief.idx===i?"#6366f1":"#334155"}`,background:bulkBrief.idx===i?"#6366f122":"#0f172a",color:bulkBrief.idx===i?"#a5b4fc":"#64748b",fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:"inherit"}
+              }, b.naam || `Briefing ${i+1}`))
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Zaken selecteren"),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}},
+              ZAKEN.map(z => {
+                const sel = bulkBrief.zaken.has(z);
+                return /*#__PURE__*/React.createElement("button", {key:z,
+                  onClick:()=>setBulkBrief(p=>{const n=new Set(p.zaken);sel?n.delete(z):n.add(z);return {...p,zaken:n};}),
+                  style:{padding:"4px 14px",borderRadius:20,border:`1px solid ${ZAAK_COLORS[z]}`,background:sel?ZAAK_COLORS[z]:"transparent",color:sel?"#fff":ZAAK_COLORS[z],fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit"}
+                }, z);
+              }),
+              /*#__PURE__*/React.createElement("button", {
+                onClick:()=>setBulkBrief(p=>({...p,zaken:p.zaken.size===ZAKEN.length?new Set():new Set(ZAKEN)})),
+                style:{padding:"4px 12px",borderRadius:20,border:"1px solid #334155",background:"transparent",color:"#64748b",fontSize:11,cursor:"pointer",fontFamily:"inherit"}
+              }, bulkBrief.zaken.size===ZAKEN.length?"Geen":"Alle")
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Tekst"),
+            /*#__PURE__*/React.createElement("textarea", {
+              style:{width:"100%",minHeight:240,background:"#0f172a",border:"1px solid #334155",borderRadius:8,color:"#e2e8f0",padding:10,fontFamily:"inherit",fontSize:12,lineHeight:1.6,resize:"vertical",boxSizing:"border-box"},
+              value:bulkBrief.tekst,
+              onChange:e=>setBulkBrief(p=>({...p,tekst:e.target.value}))
+            })
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{padding:"12px 18px",background:"#0f172a",display:"flex",gap:8,justifyContent:"flex-end",flexShrink:0}},
+          /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",onClick:()=>setBulkBrief(null)}, "Annuleer"),
+          /*#__PURE__*/React.createElement("button", {
+            className:"btn btn-primary",
+            disabled:bulkBrief.zaken.size===0,
+            onClick:()=>{
+              const maaltijden = bulkBrief.maal === "beide" ? ["lunch","diner"] : [bulkBrief.maal];
+              bulkBrief.zaken.forEach(z => {
+                let updated = {...brief[z]};
+                maaltijden.forEach(maal => {
+                  const cur = updated[maal] || [];
+                  if (cur[bulkBrief.idx]) {
+                    updated[maal] = cur.map((b,i) => i===bulkBrief.idx ? {...b,tekst:bulkBrief.tekst} : b);
+                  }
+                });
+                persistBrief(z, updated);
+              });
+              setBulkBrief(null);
+            }
+          }, `Opslaan voor ${bulkBrief.zaken.size} zaak${bulkBrief.zaken.size!==1?"en":""}`)
+        )
+      )
+    ),
+    editCell && /*#__PURE__*/React.createElement(CellModal, {
+      zaak: editCell.zaak,
+      cat: editCell.cat,
+      rule: {...editCell.rule, voor: rulesMeta?.[editCell.rule?.id]?.voor || editCell.rule?.voor || "beide", wanneer: rulesMeta?.[editCell.rule?.id]?.wanneer || "beide", couverts_van: rulesMeta?.[editCell.rule?.id]?.couverts_van || "hoogste", hasPhoto: !!(rulesMeta?.[editCell.rule?.id]?.hasPhoto ?? editCell.rule?.hasPhoto), photo: rulesMeta?.[editCell.rule?.id]?.photo || editCell.rule?.photo || null},
+      allRules,
+      onSave: (zaak, cat, updatedRule) => {
+        // Globale meta: voor, wanneer, couverts_van, hasPhoto (of foto mogelijk is)
+        if (updatedRule.voor !== undefined || updatedRule.wanneer !== undefined || updatedRule.couverts_van !== undefined || updatedRule.photo !== undefined) {
+          persistMeta({...rulesMeta, [updatedRule.id]: {
+            voor: updatedRule.voor,
+            wanneer: updatedRule.wanneer || "beide",
+            couverts_van: updatedRule.couverts_van || "hoogste",
+            hasPhoto: !!updatedRule.photo,
+            photo: updatedRule.photo || null
+          }});
+        }
+        const ruleToSave = {...updatedRule};
+        delete ruleToSave.voor;
+        delete ruleToSave.photo; // photo zit in globale meta, niet per zaak
+        const prev = allRules[zaak][cat] || [];
+        const exists = prev.find(r => r.id === ruleToSave.id);
+        const next = exists ? prev.map(r => r.id === ruleToSave.id ? ruleToSave : r) : [...prev, ruleToSave];
+        persistZaak(zaak, { ...allRules[zaak], [cat]: next });
+        setEditCell(null);
+      },
+      onDelete: (zaak, cat, id) => {
+        const next = (allRules[zaak][cat] || []).filter(r => r.id !== id);
+        persistZaak(zaak, { ...allRules[zaak], [cat]: next });
+        setEditCell(null);
+      },
+      onClose: () => setEditCell(null)
+    }),
+    /*#__PURE__*/React.createElement("div", {className:"sidebar"},
+      /*#__PURE__*/React.createElement("div", {className:"sb-logo"},
+        /*#__PURE__*/React.createElement("small", null, "Multi-Zaak"),
+        /*#__PURE__*/React.createElement("strong", null, "Admin \u2014 7 Zaken")
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"sb-nav"},
+        navItems.map(item => /*#__PURE__*/React.createElement("div", {
+          key: item.key,
+          className: `sb-item${page === item.key ? " a" : ""}`,
+          onClick: () => setPage(item.key)
+        }, /*#__PURE__*/React.createElement("span", {className:"sb-icon"}, item.icon), item.label))
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"sb-foot", style:{display:"flex",flexDirection:"column",gap:6}},
+        /*#__PURE__*/React.createElement("button", {
+          onClick: () => {
+            const data = {};
+            Object.keys(localStorage).filter(k => k.startsWith("kayuca_")).forEach(k => {
+              try { data[k] = JSON.parse(localStorage.getItem(k)); } catch {}
+            });
+            const blob = new Blob([JSON.stringify(data)], {type:"application/json"});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "kayuca_backup.json";
+            a.click();
+          },
+          style:{width:"100%",padding:"7px",borderRadius:8,border:"1px solid #334155",background:"#0f172a",color:"#94a3b8",fontSize:11,cursor:"pointer",fontFamily:"inherit",fontWeight:600}
+        }, "⬇ Exporteer data"),
+        /*#__PURE__*/React.createElement("button", {
+          onClick: async () => {
+            const ZAKEN_LIST = ["BBC","WS","TU","UBU","KAY","HF","PC"];
+            let count = 0;
+            const keys = Object.keys(localStorage).filter(k => k.startsWith("kayuca_"));
+            for (const key of keys) {
+              const value = localStorage.getItem(key);
+              if (value) { await sbSet(key, value); count++; }
+            }
+            alert("✓ " + count + " items gesynchroniseerd naar Supabase!");
+          },
+          style:{width:"100%",padding:"7px",borderRadius:8,border:"1px solid #10b981",background:"#064e3b",color:"#6ee7b7",fontSize:11,cursor:"pointer",fontFamily:"inherit",fontWeight:600,marginBottom:4}
+        }, "🔄 Sync ALLES naar Supabase"),
+        /*#__PURE__*/React.createElement("label", {
+          style:{width:"100%",padding:"7px",borderRadius:8,border:"1px solid #6366f1",background:"#1e293b",color:"#a5b4fc",fontSize:11,cursor:"pointer",fontFamily:"inherit",fontWeight:600,textAlign:"center",display:"block"}
+        },
+          "⬆ Importeer & sync naar Supabase",
+          /*#__PURE__*/React.createElement("input", {type:"file", accept:".json", style:{display:"none"},
+            onChange: async e => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const text = await file.text();
+              const data = JSON.parse(text);
+              let count = 0;
+              for (const [key, value] of Object.entries(data)) {
+                const v = JSON.stringify(value);
+                localStorage.setItem(key, v);
+                await sbSet(key, v);
+                count++;
+              }
+              alert(`✓ ${count} items geïmporteerd en gesynchroniseerd naar Supabase! Herlaad de pagina.`);
+              window.location.reload();
+            }
+          })
+        )
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", {className:"main"},
+      page === "pw" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "\uD83D\uDD11 Wachtwoord wijzigen"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Wachtwoord voor de admin interface"),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            /*#__PURE__*/React.createElement("div", {style:{maxWidth:320}},
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Nieuw wachtwoord"),
+              /*#__PURE__*/React.createElement("input", {className:"inp",type:"password",placeholder:"Nieuw wachtwoord...",id:"newpw",style:{marginBottom:10}}),
+              /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",onClick:()=>{
+                const v=document.getElementById("newpw").value;
+                if(!v)return;setSavedPw(v);document.getElementById("newpw").value="";flash();
+              }}, "Opslaan")
+            )
+          )
+        )
+      ) : page === "voorbereiding" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "\uD83D\uDDC2 Voorbereiding morgen"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Formules voor bestekkratten en sap"),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-hd"}, /*#__PURE__*/React.createElement("div", {className:"card-title"}, "\uD83C\uDF74 Bestekkratten")),
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            /*#__PURE__*/React.createElement("div", {style:{maxWidth:400}},
+              /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",borderRadius:8,padding:"12px 14px",marginBottom:14,border:"1px solid #1e293b"}},
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:10}},
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0"}}, "1 krat per"),
+                  /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",min:"1",style:{width:90},value:prep.bestek_per,onChange:e=>setPrep(p=>({...p,bestek_per:parseInt(e.target.value)||1}))}),
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0"}}, "couverts")
+                )
+              ),
+              /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",onClick:()=>persistPrep(prep)}, "Opslaan")
+            )
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-hd"}, /*#__PURE__*/React.createElement("div", {className:"card-title"}, "\uD83C\uDF79 Sap")),
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            /*#__PURE__*/React.createElement("div", {style:{maxWidth:400}},
+              /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",borderRadius:8,padding:"12px 14px",marginBottom:14,border:"1px solid #1e293b"}},
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},
+                  /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",min:"0.1",step:"0.1",style:{width:80},value:prep.sap_liter,onChange:e=>setPrep(p=>({...p,sap_liter:parseFloat(e.target.value)||1}))}),
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0"}}, "liter per"),
+                  /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",min:"1",style:{width:90},value:prep.sap_per,onChange:e=>setPrep(p=>({...p,sap_per:parseInt(e.target.value)||1}))}),
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0"}}, "couverts")
+                )
+              ),
+              /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",onClick:()=>persistPrep(prep)}, "Opslaan")
+            )
+          )
+        )
+      ) : page === "voorbereiding2" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "📅 Voorbereiding komende dagen"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Verwachte couverts + regels per dag — actieve regels verschijnen als checklist in de avond worksheet"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap"}},
+          ZAKEN.map(z => /*#__PURE__*/React.createElement("button", {key:z,
+            onClick:()=>setPrep2Zaak(z),
+            style:{padding:"4px 14px",borderRadius:20,border:`1px solid ${ZAAK_COLORS[z]}`,background:prep2Zaak===z?ZAAK_COLORS[z]:"transparent",color:prep2Zaak===z?"#fff":ZAAK_COLORS[z],fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit"}
+          }, z))
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:16}},
+          [["morgen","Morgen"],["overmorgen","Overmorgen"],["dag3","Over 2 dagen"]].map(([key,label]) =>
+            /*#__PURE__*/React.createElement("button", {key,
+              onClick:()=>setPrep2Dag(key),
+              style:{flex:1,padding:"7px",borderRadius:8,border:`1px solid ${prep2Dag===key?"#3b82f6":"#334155"}`,background:prep2Dag===key?"#1d4ed822":"#0f172a",color:prep2Dag===key?"#60a5fa":"#64748b",fontWeight:600,fontSize:13,cursor:"pointer",fontFamily:"inherit"}
+            }, label)
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-hd"}, /*#__PURE__*/React.createElement("div", {className:"card-title"}, "📊 Verwachte couverts")),
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:10}},
+              ["o","l","d"].map(k => {
+                const labels = {o:"Ontbijt",l:"Lunch",d:"Diner"};
+                const cur = prep2[prep2Zaak]?.[prep2Dag]?.fc || {};
+                return /*#__PURE__*/React.createElement("div", {key:k,style:{flex:1}},
+                  /*#__PURE__*/React.createElement("label", {className:"lbl"}, labels[k]),
+                  /*#__PURE__*/React.createElement("input", {
+                    className:"inp", type:"number", min:"0", placeholder:"0",
+                    value: cur[k] || "",
+                    onChange: e => {
+                      const d = {...(prep2[prep2Zaak] || PREP2_DEFAULT())};
+                      d[prep2Dag] = {...(d[prep2Dag] || PREP2_DAG_DEFAULT())};
+                      d[prep2Dag].fc = {...(d[prep2Dag].fc || {}), [k]: e.target.value};
+                      persistPrep2(prep2Zaak, d);
+                    }
+                  })
+                );
+              })
+            )
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-hd"}, /*#__PURE__*/React.createElement("div", {className:"card-title"}, "✅ Voorbereiding regels")),
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            (prep2[prep2Zaak]?.[prep2Dag]?.regels || []).map((regel, ri) =>
+              /*#__PURE__*/React.createElement("div", {key:regel.id,
+                style:{background:"#0f172a",borderRadius:8,padding:"10px 14px",marginBottom:8,border:"1px solid #1e293b"}
+              },
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}},
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:13,fontWeight:600,color:"#e2e8f0"}}, regel.label),
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+                    /*#__PURE__*/React.createElement("button", {
+                      style:{background:"#1e293b",border:"1px solid #334155",color:"#94a3b8",borderRadius:6,padding:"2px 8px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+                      onClick:()=>setPrep2EditRegel({zaak:prep2Zaak,dag:prep2Dag,idx:ri,regel:{...regel}})
+                    }, "✏ Bewerk"),
+                    /*#__PURE__*/React.createElement("button", {
+                      style:{background:"#450a0a",border:"1px solid #7f1d1d",color:"#fca5a5",borderRadius:6,padding:"2px 8px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+                      onClick:()=>{
+                        const d={...(prep2[prep2Zaak]||PREP2_DEFAULT())};
+                        d[prep2Dag]={...(d[prep2Dag]||PREP2_DAG_DEFAULT())};
+                        d[prep2Dag].regels=d[prep2Dag].regels.filter((_,i)=>i!==ri);
+                        persistPrep2(prep2Zaak,d);
+                      }
+                    }, "✕")
+                  )
+                ),
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}},
+                  (regel.conditions||[]).map((c,ci) =>
+                    /*#__PURE__*/React.createElement("span", {key:ci,
+                      style:{fontSize:11,padding:"2px 8px",borderRadius:20,background:"#1e3a5f",color:"#93c5fd",border:"1px solid #1d4ed8"}
+                    }, `${c.maal==="o"?"Ontbijt":c.maal==="l"?"Lunch":"Diner"} ${c.op==="gt"?">":c.op==="gte"?"≥":c.op==="lt"?"<":"≤"} ${c.value}`)
+                  )
+                )
+              )
+            ),
+            /*#__PURE__*/React.createElement("button", {
+              onClick:()=>setPrep2EditRegel({zaak:prep2Zaak,dag:prep2Dag,idx:-1,regel:{id:"r_"+Date.now(),label:"",conditions:[{maal:"l",op:"gt",value:""}]}}),
+              style:{width:"100%",padding:"10px",borderRadius:8,border:"2px dashed #334155",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:4}
+            }, "+ Regel toevoegen")
+          )
+        ),
+        prep2EditRegel && /*#__PURE__*/React.createElement("div", {style:{position:"fixed",inset:0,background:"rgba(0,0,0,.8)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:16}},
+          /*#__PURE__*/React.createElement("div", {style:{background:"#1e293b",border:"1px solid #334155",borderRadius:14,width:"100%",maxWidth:480,overflow:"hidden"}},
+            /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"14px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}},
+              /*#__PURE__*/React.createElement("strong", {style:{color:"#f1f5f9",fontSize:14}}, prep2EditRegel.idx===-1?"Nieuwe voorbereiding-regel":"Regel bewerken"),
+              /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",style:{padding:"3px 10px"},onClick:()=>setPrep2EditRegel(null)}, "✕")
+            ),
+            /*#__PURE__*/React.createElement("div", {style:{padding:18}},
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Omschrijving (zichtbaar in worksheet)"),
+              /*#__PURE__*/React.createElement("input", {
+                className:"inp", type:"text", placeholder:"Bijv: Extra glazen klaarzetten...",
+                value: prep2EditRegel.regel.label,
+                onChange: e=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,label:e.target.value}})),
+                style:{marginBottom:14}
+              }),
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Voorwaarden (alle moeten kloppen)"),
+              (prep2EditRegel.regel.conditions||[]).map((c,ci) =>
+                /*#__PURE__*/React.createElement("div", {key:ci,style:{display:"flex",gap:6,marginBottom:8,alignItems:"center"}},
+                  /*#__PURE__*/React.createElement("select", {className:"inp",style:{flex:1},value:c.maal,
+                    onChange:e=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,conditions:p.regel.conditions.map((x,i)=>i===ci?{...x,maal:e.target.value}:x)}}))},
+                    /*#__PURE__*/React.createElement("option", {value:"o"}, "Ontbijt"),
+                    /*#__PURE__*/React.createElement("option", {value:"l"}, "Lunch"),
+                    /*#__PURE__*/React.createElement("option", {value:"d"}, "Diner")
+                  ),
+                  /*#__PURE__*/React.createElement("select", {className:"inp",style:{width:70},value:c.op,
+                    onChange:e=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,conditions:p.regel.conditions.map((x,i)=>i===ci?{...x,op:e.target.value}:x)}}))},
+                    /*#__PURE__*/React.createElement("option", {value:"gt"}, ">"),
+                    /*#__PURE__*/React.createElement("option", {value:"gte"}, "≥"),
+                    /*#__PURE__*/React.createElement("option", {value:"lt"}, "<"),
+                    /*#__PURE__*/React.createElement("option", {value:"lte"}, "≤")
+                  ),
+                  /*#__PURE__*/React.createElement("input", {className:"inp",type:"number",style:{width:80},placeholder:"0",value:c.value,
+                    onChange:e=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,conditions:p.regel.conditions.map((x,i)=>i===ci?{...x,value:e.target.value}:x)}}))
+                  }),
+                  /*#__PURE__*/React.createElement("button", {
+                    style:{background:"#450a0a",border:"1px solid #7f1d1d",color:"#fca5a5",borderRadius:6,padding:"3px 8px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+                    onClick:()=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,conditions:p.regel.conditions.filter((_,i)=>i!==ci)}}))
+                  }, "✕")
+                )
+              ),
+              /*#__PURE__*/React.createElement("button", {
+                onClick:()=>setPrep2EditRegel(p=>({...p,regel:{...p.regel,conditions:[...(p.regel.conditions||[]),{maal:"l",op:"gt",value:""}]}})),
+                style:{fontSize:12,color:"#64748b",background:"none",border:"1px dashed #334155",borderRadius:6,padding:"4px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:14}
+              }, "+ Voorwaarde toevoegen"),
+              /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,justifyContent:"flex-end"}},
+                /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost",onClick:()=>setPrep2EditRegel(null)}, "Annuleer"),
+                /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",
+                  onClick:()=>{
+                    if(!prep2EditRegel.regel.label) return;
+                    const d={...(prep2[prep2EditRegel.zaak]||PREP2_DEFAULT())};
+                    d[prep2EditRegel.dag]={...(d[prep2EditRegel.dag]||PREP2_DAG_DEFAULT())};
+                    const regels=[...(d[prep2EditRegel.dag].regels||[])];
+                    if(prep2EditRegel.idx===-1) regels.push(prep2EditRegel.regel);
+                    else regels[prep2EditRegel.idx]=prep2EditRegel.regel;
+                    d[prep2EditRegel.dag].regels=regels;
+                    persistPrep2(prep2EditRegel.zaak,d);
+                    setPrep2EditRegel(null);
+                  }
+                }, "Opslaan")
+              )
+            )
+          )
+        )
+      ) : page === "personeelseten" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "🍱 Personeelseten"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Per zaak en maaltijd instellen wat het personeel eet op basis van couverts"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap"}},
+          ZAKEN.map(z => /*#__PURE__*/React.createElement("button", {key:z,
+            onClick:()=>setPersZaak(z),
+            style:{padding:"4px 14px",borderRadius:20,border:`1px solid ${ZAAK_COLORS[z]}`,background:persZaak===z?ZAAK_COLORS[z]:"transparent",color:persZaak===z?"#fff":ZAAK_COLORS[z],fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit"}
+          }, z))
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:16}},
+          ["ontbijt","lunch","diner"].map(m => {
+            const icons = {ontbijt:"☕",lunch:"🥗",diner:"🍽"};
+            return /*#__PURE__*/React.createElement("button", {key:m,
+              onClick:()=>setPersMaal(m),
+              style:{padding:"6px 20px",borderRadius:8,border:"1px solid #334155",background:persMaal===m?"#3b82f6":"#0f172a",color:persMaal===m?"#fff":"#64748b",fontWeight:600,fontSize:13,cursor:"pointer",fontFamily:"inherit"}
+            }, icons[m]+" "+m.charAt(0).toUpperCase()+m.slice(1));
+          })
+        ),
+        (pers[persZaak]?.[persMaal] || []).map((p, i) => /*#__PURE__*/React.createElement("div", {key:i,
+          style:{background:"#1e293b",border:"1px solid #334155",borderRadius:12,marginBottom:12,overflow:"hidden"}
+        },
+          /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",whiteSpace:"nowrap"}},
+              i === 0 ? `0 – ${p.tot === 9999 ? "∞" : p.tot} cov.` : `${(pers[persZaak][persMaal][i-1]?.tot||0)+1} – ${p.tot === 9999 ? "∞" : p.tot} cov.`
+            ),
+            /*#__PURE__*/React.createElement("input", {
+              style:{flex:1,background:"transparent",border:"none",color:"#f1f5f9",fontWeight:700,fontSize:14,fontFamily:"inherit",outline:"none"},
+              value:p.label,
+              onChange:e=>{ const n=[...(pers[persZaak][persMaal])]; n[i]={...n[i],label:e.target.value}; persistPers(persZaak,{...pers[persZaak],[persMaal]:n}); }
+            }),
+            p.tot !== 9999 && /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:4}},
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"#64748b"}},"Max:"),
+              /*#__PURE__*/React.createElement("input", {
+                type:"number",min:"1",
+                style:{width:70,background:"#1e293b",border:"1px solid #334155",borderRadius:6,color:"#e2e8f0",padding:"3px 8px",fontFamily:"inherit",fontSize:12},
+                value:p.tot,
+                onChange:e=>{ const n=[...(pers[persZaak][persMaal])]; n[i]={...n[i],tot:parseInt(e.target.value)||0}; persistPers(persZaak,{...pers[persZaak],[persMaal]:n}); }
+              }),
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"#64748b"}},"cov.")
+            ),
+            /*#__PURE__*/React.createElement("button", {
+              style:{background:"#450a0a",border:"1px solid #7f1d1d",color:"#fca5a5",borderRadius:6,padding:"3px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+              onClick:()=>{ if((pers[persZaak][persMaal]).length<=1)return; const n=(pers[persZaak][persMaal]).filter((_,j)=>j!==i); persistPers(persZaak,{...pers[persZaak],[persMaal]:n}); }
+            }, "✕")
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{padding:"10px 16px"}},
+            /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Omschrijving / menu"),
+            /*#__PURE__*/React.createElement("textarea", {
+              style:{width:"100%",minHeight:60,background:"#0f172a",border:"1px solid #334155",borderRadius:8,color:"#e2e8f0",padding:8,fontFamily:"inherit",fontSize:12,resize:"vertical",boxSizing:"border-box"},
+              value:p.omschrijving,
+              onChange:e=>{ const n=[...(pers[persZaak][persMaal])]; n[i]={...n[i],omschrijving:e.target.value}; persistPers(persZaak,{...pers[persZaak],[persMaal]:n}); }
+            })
+          )
+        )),
+        /*#__PURE__*/React.createElement("button", {
+          onClick:()=>{
+            const cur = pers[persZaak]?.[persMaal] || [];
+            const prev = cur[cur.length-1];
+            if(prev) { const n=[...cur]; n[n.length-1]={...prev,tot:200}; persistPers(persZaak,{...pers[persZaak],[persMaal]:[...n,{tot:9999,label:"Warm eten",omschrijving:""}]}); }
+            else persistPers(persZaak,{...pers[persZaak],[persMaal]:[{tot:9999,label:"Warm eten",omschrijving:""}]});
+          },
+          style:{width:"100%",padding:"10px",borderRadius:8,border:"2px dashed #334155",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}
+        }, "+ Drempel toevoegen")
+      ) : page === "secties" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "👁 Secties"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Bepaal per sectie voor wie en wanneer die zichtbaar is"),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            /*#__PURE__*/React.createElement("div", {style:{display:"grid",gridTemplateColumns:"1fr auto auto",gap:8,marginBottom:8,paddingBottom:8,borderBottom:"1px solid #334155"}},
+              /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",fontWeight:600}},"Sectie"),
+              /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",fontWeight:600,textAlign:"center"}},"Voor wie"),
+              /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b",fontWeight:600,textAlign:"center"}},"Wanneer")
+            ),
+            Object.entries(secties).map(([id, s]) => {
+              const voorColors = {beide:"#6366f1",bediening:"#f59e0b",keuken:"#10b981"};
+              const wanneerColors = {beide:"#3b82f6",dag:"#f59e0b",avond:"#8b5cf6"};
+              return /*#__PURE__*/React.createElement("div", {key:id,
+                style:{display:"grid",gridTemplateColumns:"1fr auto auto",gap:8,alignItems:"center",padding:"8px 0",borderBottom:"1px solid #1e293b"}
+              },
+                /*#__PURE__*/React.createElement("span", {style:{fontSize:13,color:"#e2e8f0",fontWeight:500}}, s.label),
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:3}},
+                  ["beide","bediening","keuken"].map(v => /*#__PURE__*/React.createElement("button", {key:v,
+                    onClick:()=>persistSecties({...secties,[id]:{...s,voor:v}}),
+                    style:{padding:"3px 8px",borderRadius:6,border:`1px solid ${s.voor===v?voorColors[v]:"#334155"}`,background:s.voor===v?voorColors[v]+"22":"transparent",color:s.voor===v?voorColors[v]:"#64748b",fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}
+                  }, v==="beide"?"Beide":v==="bediening"?"Bed.":"Keu."))
+                ),
+                /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:3}},
+                  ["beide","dag","avond"].map(v => /*#__PURE__*/React.createElement("button", {key:v,
+                    onClick:()=>persistSecties({...secties,[id]:{...s,wanneer:v}}),
+                    style:{padding:"3px 8px",borderRadius:6,border:`1px solid ${(s.wanneer||"beide")===v?wanneerColors[v]:"#334155"}`,background:(s.wanneer||"beide")===v?wanneerColors[v]+"22":"transparent",color:(s.wanneer||"beide")===v?wanneerColors[v]:"#64748b",fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}
+                  }, v==="beide"?"Beide":v==="dag"?"Dag":"Avond"))
+                )
+              );
+            })
+          )
+        )
+      ) : page === "briefing" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "📋 Briefing"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Briefingsteksten per zaak en maaltijd — drempelwaarden bepalen welke briefing verschijnt"),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap",alignItems:"center",justifyContent:"space-between"}},
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,flexWrap:"wrap"}},
+            ZAKEN.map(z => /*#__PURE__*/React.createElement("button", {key:z,
+              onClick:()=>setBriefZaak(z),
+              style:{padding:"4px 14px",borderRadius:20,border:`1px solid ${ZAAK_COLORS[z]}`,background:briefZaak===z?ZAAK_COLORS[z]:"transparent",color:briefZaak===z?"#fff":ZAAK_COLORS[z],fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit"}
+            }, z))
+          ),
+          /*#__PURE__*/React.createElement("button", {
+            className:"btn btn-ghost",
+            style:{fontSize:12,padding:"5px 12px",border:"1px solid #334155"},
+            onClick:()=>setBulkBrief({maal:briefMaal,zaken:new Set(ZAKEN),idx:0,tekst:(brief[briefZaak]?.[briefMaal]?.[0]?.tekst||"")})
+          }, "✏ Bewerk alle zaken")
+        ),
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:16}},
+          ["lunch","diner"].map(m => /*#__PURE__*/React.createElement("button", {key:m,
+            onClick:()=>setBriefMaal(m),
+            style:{padding:"6px 20px",borderRadius:8,border:"1px solid #334155",background:briefMaal===m?"#3b82f6":"#0f172a",color:briefMaal===m?"#fff":"#64748b",fontWeight:600,fontSize:13,cursor:"pointer",fontFamily:"inherit",textTransform:"capitalize"}
+          }, m))
+        ),
+        (brief[briefZaak]?.[briefMaal] || []).map((b, i) => /*#__PURE__*/React.createElement("div", {key:i,
+          style:{background:"#1e293b",border:"1px solid #334155",borderRadius:12,marginBottom:12,overflow:"hidden"}
+        },
+          /*#__PURE__*/React.createElement("div", {style:{background:"#0f172a",padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:10}},
+              /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"#64748b"}},
+                i === 0 ? `0 – ${b.tot} couverts` : `${(brief[briefZaak][briefMaal][i-1]?.tot||0)+1} – ${b.tot === 9999 ? "∞" : b.tot} couverts`
+              ),
+              /*#__PURE__*/React.createElement("input", {
+                style:{background:"transparent",border:"none",color:"#f1f5f9",fontWeight:700,fontSize:14,fontFamily:"inherit",width:220,outline:"none"},
+                value:b.naam,
+                onChange:e=>{
+                  const next = [...(brief[briefZaak][briefMaal])];
+                  next[i] = {...next[i], naam: e.target.value};
+                  persistBrief(briefZaak, {...brief[briefZaak], [briefMaal]: next});
+                }
+              })
+            ),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,alignItems:"center"}},
+              b.tot !== 9999 && /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:4}},
+                /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"#64748b"}}, "Max:"),
+                /*#__PURE__*/React.createElement("input", {
+                  type:"number",min:"1",
+                  style:{width:70,background:"#1e293b",border:"1px solid #334155",borderRadius:6,color:"#e2e8f0",padding:"3px 8px",fontFamily:"inherit",fontSize:12},
+                  value:b.tot,
+                  onChange:e=>{
+                    const next = [...(brief[briefZaak][briefMaal])];
+                    next[i] = {...next[i], tot: parseInt(e.target.value)||0};
+                    persistBrief(briefZaak, {...brief[briefZaak], [briefMaal]: next});
+                  }
+                }),
+                /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"#64748b"}}, "cov.")
+              ),
+              /*#__PURE__*/React.createElement("button", {
+                style:{background:"#450a0a",border:"1px solid #7f1d1d",color:"#fca5a5",borderRadius:6,padding:"3px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+                onClick:()=>{
+                  if((brief[briefZaak][briefMaal]).length <= 1) return;
+                  const next = (brief[briefZaak][briefMaal]).filter((_,j)=>j!==i);
+                  persistBrief(briefZaak, {...brief[briefZaak], [briefMaal]: next});
+                }
+              }, "✕")
+            )
+          ),
+          briefEdit === `${briefZaak}_${briefMaal}_${i}` ?
+            /*#__PURE__*/React.createElement("div", {style:{padding:12}},
+              /*#__PURE__*/React.createElement("textarea", {
+                style:{width:"100%",minHeight:300,background:"#0f172a",border:"1px solid #334155",borderRadius:8,color:"#e2e8f0",padding:10,fontFamily:"inherit",fontSize:12,lineHeight:1.6,resize:"vertical",boxSizing:"border-box"},
+                value:b.tekst,
+                onChange:e=>{
+                  const next = [...(brief[briefZaak][briefMaal])];
+                  next[i] = {...next[i], tekst: e.target.value};
+                  persistBrief(briefZaak, {...brief[briefZaak], [briefMaal]: next});
+                }
+              }),
+              /*#__PURE__*/React.createElement("button", {
+                className:"btn btn-primary",style:{marginTop:8},
+                onClick:()=>setBriefEdit(null)
+              }, "Sluiten")
+            ) :
+            /*#__PURE__*/React.createElement("div", {style:{padding:"8px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}},
+              /*#__PURE__*/React.createElement("span", {style:{fontSize:12,color:"#64748b"}}, b.tekst.split('\n').slice(0,2).join(' · ').substring(0,80)+"..."),
+              /*#__PURE__*/React.createElement("button", {
+                className:"btn btn-ghost",style:{fontSize:12,padding:"4px 12px"},
+                onClick:()=>setBriefEdit(`${briefZaak}_${briefMaal}_${i}`)
+              }, "✏ Bewerken")
+            )
+        )),
+        /*#__PURE__*/React.createElement("button", {
+          onClick:()=>{
+            const next = [...(brief[briefZaak]?.[briefMaal]||[]), {tot:9999,naam:"Nieuwe briefing",tekst:""}];
+            // Zet vorige laatste tot op 999 als die 9999 was
+            if(next.length > 1 && next[next.length-2].tot === 9999) next[next.length-2].tot = 200;
+            persistBrief(briefZaak, {...brief[briefZaak], [briefMaal]: next});
+          },
+          style:{width:"100%",padding:"10px",borderRadius:8,border:"2px dashed #334155",background:"transparent",color:"#64748b",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}
+        }, "+ Briefing toevoegen")
+      ) : page === "eetlijst" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "\uD83C\uDF7D Eetlijst regels"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Uitleg bij de eetregels in de worksheet"),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-hd"}, /*#__PURE__*/React.createElement("div", {className:"card-title"}, "Eetregels")),
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            eet.map((regel,i) => /*#__PURE__*/React.createElement("div", {key:regel.id,className:"rule-row",style:{flexDirection:"column",alignItems:"stretch",gap:8}},
+              /*#__PURE__*/React.createElement("label", {className:"lbl"}, "Titel"),
+              /*#__PURE__*/React.createElement("input", {className:"inp",type:"text",value:regel.titel,onChange:e=>setEet(prev=>prev.map((r,j)=>j===i?{...r,titel:e.target.value}:r))}),
+              /*#__PURE__*/React.createElement("label", {className:"lbl",style:{marginTop:6}}, "Uitleg"),
+              /*#__PURE__*/React.createElement("input", {className:"inp",type:"text",value:regel.uitleg,onChange:e=>setEet(prev=>prev.map((r,j)=>j===i?{...r,uitleg:e.target.value}:r))})
+            )),
+            /*#__PURE__*/React.createElement("button", {className:"btn btn-primary",style:{marginTop:14},onClick:()=>persistEet(eet)}, "Opslaan")
+          )
+        )
+      ) : page === "categorieen" ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, "⚙ Categorieën"),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Beheer categorieën — volgorde, naam en icoon"),
+        /*#__PURE__*/React.createElement("div", {className:"card"},
+          /*#__PURE__*/React.createElement("div", {className:"card-body"},
+            cats.map((cat, i) => /*#__PURE__*/React.createElement("div", {key:cat.id,
+              style:{display:"flex",alignItems:"center",gap:8,padding:"8px 0",borderBottom:"1px solid #1e293b"}
+            },
+              /*#__PURE__*/React.createElement("div", {style:{display:"flex",flexDirection:"column",gap:2}},
+                /*#__PURE__*/React.createElement("button", {
+                  disabled: i===0,
+                  onClick:()=>{ if(i===0)return; const n=[...cats]; [n[i-1],n[i]]=[n[i],n[i-1]]; persistCats(n); },
+                  style:{background:"none",border:"1px solid #334155",borderRadius:4,color:i===0?"#334155":"#94a3b8",cursor:i===0?"default":"pointer",padding:"0 6px",fontSize:12,lineHeight:"18px"}
+                }, "↑"),
+                /*#__PURE__*/React.createElement("button", {
+                  disabled: i===cats.length-1,
+                  onClick:()=>{ if(i===cats.length-1)return; const n=[...cats]; [n[i],n[i+1]]=[n[i+1],n[i]]; persistCats(n); },
+                  style:{background:"none",border:"1px solid #334155",borderRadius:4,color:i===cats.length-1?"#334155":"#94a3b8",cursor:i===cats.length-1?"default":"pointer",padding:"0 6px",fontSize:12,lineHeight:"18px"}
+                }, "↓")
+              ),
+              /*#__PURE__*/React.createElement("input", {
+                className:"inp",style:{width:48},
+                value:cat.icon,
+                placeholder:"🎯",
+                onChange:e=>{ const n=[...cats]; n[i]={...n[i],icon:e.target.value}; persistCats(n); }
+              }),
+              /*#__PURE__*/React.createElement("input", {
+                className:"inp",style:{flex:1},
+                value:cat.label,
+                onChange:e=>{ const n=[...cats]; n[i]={...n[i],label:e.target.value}; persistCats(n); }
+              }),
+              /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:3}},
+                ["beide","dag","avond"].map(v => {
+                  const wc = {beide:"#3b82f6",dag:"#f59e0b",avond:"#8b5cf6"};
+                  const w = cat.wanneer||"beide";
+                  return /*#__PURE__*/React.createElement("button", {key:v,
+                    onClick:()=>{ const n=[...cats]; n[i]={...n[i],wanneer:v}; persistCats(n); },
+                    style:{padding:"3px 8px",borderRadius:6,border:`1px solid ${w===v?wc[v]:"#334155"}`,background:w===v?wc[v]+"22":"transparent",color:w===v?wc[v]:"#64748b",fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}
+                  }, v==="beide"?"Beide":v==="dag"?"Dag":"Avond");
+                })
+              ),
+              /*#__PURE__*/React.createElement("button", {
+                style:{background:"#450a0a",border:"1px solid #7f1d1d",color:"#fca5a5",borderRadius:6,padding:"4px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit"},
+                onClick:()=>{ if(!confirm(`Categorie "${cat.label}" verwijderen?`))return; persistCats(cats.filter((_,j)=>j!==i)); }
+              }, "✕")
+            )),
+            /*#__PURE__*/React.createElement("div", {style:{marginTop:12,display:"flex",gap:8}},
+              /*#__PURE__*/React.createElement("input", {
+                className:"inp",id:"newCatIcon",style:{width:48},placeholder:"🎯"
+              }),
+              /*#__PURE__*/React.createElement("input", {
+                className:"inp",id:"newCatLabel",style:{flex:1},placeholder:"Naam nieuwe categorie..."
+              }),
+              /*#__PURE__*/React.createElement("button", {
+                className:"btn btn-primary",
+                onClick:()=>{
+                  const icon = document.getElementById("newCatIcon").value || "📋";
+                  const label = document.getElementById("newCatLabel").value;
+                  if(!label) return;
+                  const id = "cat_" + Date.now();
+                  persistCats([...cats, {id, label, icon}]);
+                  // Initialiseer lege regels voor alle zaken
+                  const updated = {...allRules};
+                  ZAKEN.forEach(z => {
+                    if(!updated[z]) updated[z] = {};
+                    updated[z][id] = [];
+                    saveRulesForZaak(z, updated[z]);
+                  });
+                  setAllRules(updated);
+                  document.getElementById("newCatIcon").value = "";
+                  document.getElementById("newCatLabel").value = "";
+                }
+              }, "+ Toevoegen")
+            )
+          )
+        )
+      ) : cats.find(c => c.id === page) ? /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("div", {className:"page-title"}, getCatMeta(page).icon, " ", getCatMeta(page).label),
+        /*#__PURE__*/React.createElement("div", {className:"page-sub"}, "Grenswaarden per zaak — klik op een cel om te bewerken, gebruik ↑↓ om volgorde aan te passen"),
+        /*#__PURE__*/React.createElement(RulesTable, {
+          cat: page,
+          catRules: getCatRules(page),
+          allRules,
+          rulesMeta,
+          onCellClick: (zaak, cat, rule) => setEditCell({zaak, cat, rule}),
+          onPhotoUpdate: (ruleId, photo) => {
+            persistMeta({...rulesMeta, [ruleId]: {
+              ...rulesMeta[ruleId],
+              hasPhoto: !!photo,
+              photo: photo
+            }});
+          },
+          onReorder: (ruleId, dir) => {
+            // Verplaats regel in alle zaken
+            const updated = {...allRules};
+            ZAKEN.forEach(z => {
+              const arr = [...(updated[z]?.[page] || [])];
+              const idx = arr.findIndex(r => r.id === ruleId);
+              if(idx < 0) return;
+              const newIdx = idx + dir;
+              if(newIdx < 0 || newIdx >= arr.length) return;
+              [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+              updated[z] = {...updated[z], [page]: arr};
+              saveRulesForZaak(z, updated[z]);
+            });
+            setAllRules(updated);
+            flash();
+          }
+        }),
+        /*#__PURE__*/React.createElement(AddRulePanel, {
+          cat: page,
+          allRules,
+          onAdd: (cat, newRule, zaken) => {
+            if (newRule.voor || newRule.wanneer || newRule.couverts_van || newRule.hasPhoto) {
+              const newMeta = {...rulesMeta, [newRule.id]: {
+                voor: newRule.voor || "beide",
+                wanneer: newRule.wanneer || "beide",
+                couverts_van: newRule.couverts_van || "hoogste",
+                hasPhoto: !!newRule.hasPhoto
+              }};
+              persistMeta(newMeta);
+            }
+            const ruleToSave = {...newRule};
+            delete ruleToSave.voor;
+            const updated = {...allRules};
+            zaken.forEach(z => {
+              const existing = updated[z]?.[cat] || [];
+              if (!existing.find(r => r.id === ruleToSave.id)) {
+                updated[z] = {...updated[z], [cat]: [...existing, ruleToSave]};
+                saveRulesForZaak(z, updated[z]);
+              }
+            });
+            setAllRules(updated);
+            flash();
+          }
+        })
+      ) : /*#__PURE__*/React.createElement("div", {style:{padding:40,textAlign:"center",color:"#475569"}}, "Selecteer een categorie")
+    )
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
